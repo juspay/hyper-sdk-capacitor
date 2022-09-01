@@ -6,9 +6,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://maven.juspay.in/jp-build-packages/hypersdk-asset-download/releases/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'in.juspay:hypersdk-asset-plugin:1.0.3'
     }
 }
 
@@ -43,9 +47,11 @@ repositories {
     mavenCentral()
 }
 
+apply plugin: 'hypersdk-asset-plugin'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "in.juspay:hypersdk:2.1.2"
 }

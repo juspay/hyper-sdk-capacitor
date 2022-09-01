@@ -1,6 +1,6 @@
 {
   "name": "hyper-sdk-capacitor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Capacior Wrapper over HyperSDK",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -13,14 +13,14 @@
     "ios/Plugin/",
     "HyperSdkCapacitor.podspec"
   ],
-  "author": "Harsh Garg <harsh.garg@juspay.in>",
-  "license": "Apache-2.0",
+  "author": "Juspay Technologies Pvt. Ltd.",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/harshgarg_juspay/hyper-sdk-capacitor.git"
+    "url": "git+https://bitbucket.org/juspay/hyper-sdk-capacitor.git"
   },
   "bugs": {
-    "url": "https://bitbucket.org/harshgarg_juspay/hyper-sdk-capacitor/issues"
+    "url": "https://bitbucket.org/juspay/hyper-sdk-capacitor/issues"
   },
   "keywords": [
     "capacitor",
@@ -37,8 +37,7 @@
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
-    "docgen": "docgen --api HyperServicesPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
+    "build": "npm run clean && tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build",
@@ -48,7 +47,6 @@
   "devDependencies": {
     "@capacitor/android": "^4.0.0",
     "@capacitor/core": "^4.0.0",
-    "@capacitor/docgen": "^0.0.18",
     "@capacitor/ios": "^4.0.0",
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",

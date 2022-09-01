@@ -1,5 +1,71 @@
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Camera } from '@capacitor/camera';
+import { HyperServices } from 'hyper-sdk-capacitor';
+import { App } from '@capacitor/app';
+
+import * as KJUR from 'jsrsasign'
+import merchantData from './creds';
+
+// const { HyperServices } from '';
+/*
+merchantData has the folloing values [Get these values from Juspay Team]
+const merchantData = {
+  service: "in.juspay.hyperpay", {for Payment Page},
+  merchantId : <merchant_id> ,
+  clientId : <merchant_id>,
+  merchantKeyId: <merchant key id>,
+  privateKey: <private Key shared by Juspay>
+}
+*/
+
+const uuidv4 = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+const newOrderId = () => {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < 10; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function hexToBase64(hexstring) {
+  return btoa(hexstring.match(/\w{2}/g).map(function(a) {
+      return String.fromCharCode(parseInt(a, 16));
+  }).join(""));
+}
+
+function generateSignature(privateKey, payload) {
+  var rsaKey= new KJUR.RSAKey();
+  rsaKey.readPrivateKeyFromPEMString(privateKey);
+  var sig = new KJUR.crypto.Signature({"alg": "SHA256withRSA"});
+  sig.init(rsaKey);
+  sig.updateString(payload)
+  var sigValueHex = sig.sign()
+  var base64String = hexToBase64(sigValueHex)
+  return base64String;
+}
+
+const getSignature = (signatureJson) => {
+  var signatureJsonString = JSON.stringify(signatureJson);
+
+  var privateKey = merchantData.privateKey;
+  if (!privateKey.startsWith("-----BEGIN RSA PRIVATE KEY-----\n")){
+      privateKey = "-----BEGIN RSA PRIVATE KEY-----\n" + privateKey;
+  }
+  if (!privateKey.endsWith("\n-----END RSA PRIVATE KEY-----")){
+      privateKey = privateKey + "\n-----END RSA PRIVATE KEY-----";
+  }
+
+  return generateSignature(privateKey, signatureJsonString);
+}
 
 window.customElements.define(
   'capacitor-welcome',
@@ -7,9 +73,61 @@ window.customElements.define(
     constructor() {
       super();
 
+
       SplashScreen.hide();
 
       const root = this.attachShadow({ mode: 'open' });
+
+      console.warn('HyperServices', HyperServices);
+
+      HyperServices.addListener('HyperEvent', async (data) => {
+        console.log("SDK Event : ", data)
+        var event = data["event"];
+        try {
+          const textView = root.getElementById("text-view");
+          textView.innerHTML += "<p>SDK Event</p>";
+          textView.innerHTML += JSON.stringify(data);
+          textView.innerHTML += "<br>";
+        } catch (error) {
+
+        }
+        switch (event) {
+          case "show_loader": {
+            // Show some loader here
+            // toggleLoader(true);
+          }
+          break;
+          case "hide_loader": {
+          // Hide Loader
+          }
+          break;
+          case "initiate_result": {
+            // Get the payload
+            let payload = data["payload"];
+            console.log("initiate result: ", data)
+          }
+          break;
+          case "process_result": {
+            // Get the payload
+            let payload = data["payload"];
+            console.log("process result: ", data)
+          }
+          break;
+          default:
+            //Error handling
+            let payload = data;
+            console.log("process result: ", payload)
+            break;
+        }
+      });
+
+
+      App.addListener('backButton', async (data) => {
+        const { onBackPressed } = await HyperServices.onBackPressed();
+        if (!onBackPressed) {
+          window.history.back();
+        }
+      });
 
       root.innerHTML = `
     <style>
@@ -35,6 +153,7 @@ window.customElements.define(
       }
       main {
         padding: 15px;
+
       }
       main hr { height: 1px; background-color: #eee; border: 0; }
       main h1 {
@@ -54,60 +173,176 @@ window.customElements.define(
       main pre {
         white-space: pre-line;
       }
+      .btn-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .btn {
+        min-width: 200px;
+        padding: 8px 16px;
+        background : #04AA6D!important;
+        border: none;
+        border-radius: 5px;
+        font-size: 17px;
+        color: #ffffff;
+      }
+      .text-view {
+        min-width: 240px;
+        height: wrap-content;
+        padding: 8px 16px;
+        border: 1px solid blue;
+        border-radius: 5px;
+        font-size: 17px;
+        margin-top: 24px;
+        word-break: break-all;
+        max-height: 400px;
+        overflow-y: scroll;
+      }
     </style>
     <div>
       <capacitor-welcome-titlebar>
         <h1>Capacitor</h1>
       </capacitor-welcome-titlebar>
       <main>
-        <p>
-          Capacitor makes it easy to build powerful apps for the app stores, mobile web (Progressive Web Apps), and desktop, all
-          with a single code base.
-        </p>
-        <h2>Getting Started</h2>
-        <p>
-          You'll probably need a UI framework to build a full-featured app. Might we recommend
-          <a target="_blank" href="http://ionicframework.com/">Ionic</a>?
-        </p>
-        <p>
-          Visit <a href="https://capacitorjs.com">capacitorjs.com</a> for information
-          on using native features, building plugins, and more.
-        </p>
-        <a href="https://capacitorjs.com" target="_blank" class="button">Read more</a>
-        <h2>Tiny Demo</h2>
-        <p>
-          This demo shows how to call Capacitor plugins. Say cheese!
-        </p>
-        <p>
-          <button class="button" id="take-photo">Take Photo</button>
-        </p>
-        <p>
-          <img id="image" style="max-width: 100%">
-        </p>
+      <div class="btn-wrapper">
+        <button class="btn" id="create_hyper_btn" >Create Hyper Services</button>
+        </br>
+        <button class="btn" id="prefetch_btn" >Prefetch</button>
+        </br>
+        <button class="btn" id="init_btn" >Initiate</button>
+        </br>
+        <button class="btn" id="is_init_btn" >Is Initiatialised?</button>
+        </br>
+        <button class="btn" id="process_btn" >Process</button>
+        </br>
+        <button class="btn btn" id="terminate" >Terminate</button>
+        </br>
+        <button class="btn btn" id="is_null" >isNull</button>
+      </div>
+      <div class="text-view" id="text-view"></div>
       </main>
     </div>
     `;
     }
 
+
     connectedCallback() {
       const self = this;
 
-      self.shadowRoot.querySelector('#take-photo').addEventListener('click', async function (e) {
-        try {
-          const photo = await Camera.getPhoto({
-            resultType: 'uri',
-          });
+      const textView = self.shadowRoot.getElementById("text-view");
+      self.shadowRoot.querySelector("#create_hyper_btn").addEventListener("click", async (e) => {
+        await HyperServices.createHyperServices();
+      })
 
-          const image = self.shadowRoot.querySelector('#image');
-          if (!image) {
-            return;
+      self.shadowRoot.querySelector("#prefetch_btn").addEventListener("click", async () => {
+        const payload = {
+          "requestId" : uuidv4(),
+          "service" : "in.juspay.hyperpay",
+          "payload"  : {
+              "clientId" : merchantData.clientId
           }
+        }
+        try {
+          textView.innerHTML += "<p>Prefetch Payload</p>";
+          textView.innerHTML += JSON.stringify(payload);
+        } catch (error) {
 
-          image.src = photo.webPath;
+        }
+        await HyperServices.preFetch(payload);
+      })
+
+      self.shadowRoot.querySelector('#init_btn').addEventListener('click', async function (e) {
+        try {
+          var initiatePayload = {
+            service: merchantData.service,
+            requestId: uuidv4(),
+            payload: {
+              action: "initiate",
+              merchantId: merchantData.merchantId,
+              clientId: merchantData.clientId,
+              environment: "sandbox",
+            },
+          };
+          try {
+            textView.innerHTML += "<br><p>Initiate Payload</p>";
+            textView.innerHTML += JSON.stringify(initiatePayload);
+          } catch (error) {
+
+          }
+          await HyperServices.initiate(initiatePayload);
         } catch (e) {
-          console.warn('User cancelled', e);
+          textView.innerHTML += "<p>Initiate failed!</p>";
+          console.warn('Initiate failed', e);
         }
       });
+
+      self.shadowRoot.querySelector("#is_init_btn").addEventListener("click", async (e) => {
+        var { isInitialised } = await HyperServices.isInitialised();
+        console.log("is SDK Initialised? ", isInitialised);
+        try {
+          textView.innerHTML += "<br><span>Initialised? = </span>";
+          textView.innerHTML += isInitialised;
+        } catch (error) {
+
+        }
+      })
+
+      self.shadowRoot.querySelector("#process_btn").addEventListener("click", async (e) => {
+        try {
+          const orderDetailsPayload = {
+            order_id : "DW-" + newOrderId(),
+            merchant_id: merchantData.merchantId,
+            amount: "10.0",
+            timestamp: Date.now().toString(),
+            customer_id: "9742144874",
+            customer_phone: "9742144874",
+            customer_email: "test007@gmail.com",
+            return_url: "https://sandbox.juspay.in/end"
+          }
+          let signature = getSignature(orderDetailsPayload);
+          const processPayload = {
+            "requestId": uuidv4(),
+            "service": merchantData.service,
+            "payload": {
+                "action": "paymentPage",
+                "clientId": merchantData.clientId,
+                "merchantKeyId": merchantData.merchantKeyId,
+                "orderDetails": JSON.stringify(orderDetailsPayload),
+                "signature": signature
+            }
+          }
+          console.log("Process Payload: ", processPayload);
+          try {
+            textView.innerHTML += "<br><p>Process Payload = </p>";
+            textView.innerHTML += JSON.stringify(processPayload);
+            textView.innerHTML += "<br>";
+          } catch (error) {
+
+          }
+          await HyperServices.process(processPayload);
+        } catch (e) {
+          console.warn('Process Failed: ', e);
+        }
+
+      })
+      self.shadowRoot.querySelector("#terminate").addEventListener("click", async (e) => {
+        await HyperServices.terminate();
+      })
+
+      self.shadowRoot.querySelector("#is_null").addEventListener("click", async (e) => {
+        var { isNull } = await HyperServices.isNull();
+        console.log("is isNull? ", isNull);
+        try {
+          textView.innerHTML += "<br><span>isNull? = </span>";
+          textView.innerHTML += isNull;
+          textView.innerHTML += "<br>";
+        } catch (e) {
+
+        }
+      })
     }
   }
 );

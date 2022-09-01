@@ -23,7 +23,6 @@ This guide provides instructions for contributing to this Capacitor plugin.
 
 #### `npm run build`
 
-Build the plugin web assets and generate plugin API documentation using [`@capacitor/docgen`](https://github.com/ionic-team/capacitor-docgen).
 
 It will compile the TypeScript code from `src/` into ESM JavaScript in `dist/esm/`. These files are used in apps with bundlers when your plugin is imported.
 
