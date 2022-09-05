@@ -11,6 +11,7 @@ public class HyperServicesPlugin: CAPPlugin {
         if (hyperInstance == nil) {
             hyperInstance = HyperServices();
         }
+        call.resolve()
     }
 
     @objc func preFetch(_ call: CAPPluginCall) {
@@ -20,7 +21,10 @@ public class HyperServicesPlugin: CAPPlugin {
             DispatchQueue.main.sync {
                 HyperServices.preFetch(payload!)
             }
+            call.resolve()
+            return
         }
+        call.reject("Missing prefetch payload", nil, nil, nil)
     }
 
     @objc func initiate(_ call: CAPPluginCall) {
@@ -38,6 +42,7 @@ public class HyperServicesPlugin: CAPPlugin {
                 })
             }
         }
+        call.resolve()
     }
 
     @objc func isInitialised(_ call: CAPPluginCall) {
@@ -63,6 +68,7 @@ public class HyperServicesPlugin: CAPPlugin {
                 self.hyperInstance.process(payload)
             }
         }
+        call.resolve()
     }
 
     @objc func terminate(_ call: CAPPluginCall) {
@@ -70,6 +76,7 @@ public class HyperServicesPlugin: CAPPlugin {
             self.hyperInstance.terminate()
         }
         self.hyperInstance = nil
+        call.resolve()
     }
 
     @objc func updateBaseViewController(_ call: CAPPluginCall) {

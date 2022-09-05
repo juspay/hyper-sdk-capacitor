@@ -1,18 +1,18 @@
 export interface HyperServicesPlugin {
 
-  preFetch(payload: any): Promise<void>;
+  createHyperServices(clientId?: string, service?: string): Promise<void>;
 
-  createHyperServices(): Promise<void>;
+  preFetch(payload: any): Promise<void>;
 
   initiate(payload: string): Promise<void>;
 
-  terminate(): Promise<void>;
-
-  isInitialised(): Promise<boolean>;
-
   process(payload: any): Promise<void>;
 
-  onBackPressed(): Promise<boolean>;
+  terminate(): Promise<void>;
 
-  isNull(): Promise<boolean>;
+  isInitialised(): Promise<{ isInitialised: boolean }>;
+
+  onBackPressed(): Promise<{ onBackPressed: boolean }>;
+
+  isNull(): Promise<{ isNull: boolean }>;
 }

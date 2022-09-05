@@ -1,14 +1,17 @@
-import { SplashScreen } from '@capacitor/splash-screen';
-import { Camera } from '@capacitor/camera';
-import { HyperServices } from 'hyper-sdk-capacitor';
+/* eslint-disable no-undef */
 import { App } from '@capacitor/app';
-
+import { Capacitor } from '@capacitor/core';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { HyperServices } from 'hyper-sdk-capacitor';
 import * as KJUR from 'jsrsasign'
+
 import merchantData from './creds';
+
 
 // const { HyperServices } from '';
 /*
 merchantData has the folloing values [Get these values from Juspay Team]
+(This is to create signature at frontend. Ideally it should be created in backend.)
 const merchantData = {
   service: "in.juspay.hyperpay", {for Payment Page},
   merchantId : <merchant_id> ,
@@ -67,6 +70,19 @@ const getSignature = (signatureJson) => {
   return generateSignature(privateKey, signatureJsonString);
 }
 
+const toggleLoader = (status) => {
+  var loader = document.getElementById("loaderDIV");
+  if (status) {
+    if (loader.style.display === "none" || loader.style.display === "") {
+      loader.style.display = "block";
+    }
+  } else {
+    if (loader.style.display === "block") {
+      loader.style.display = "none";
+    }
+  }
+}
+
 window.customElements.define(
   'capacitor-welcome',
   class extends HTMLElement {
@@ -80,8 +96,10 @@ window.customElements.define(
 
       console.warn('HyperServices', HyperServices);
 
+
+
       HyperServices.addListener('HyperEvent', async (data) => {
-        console.log("SDK Event : ", data)
+        console.error("SDK Event : ", data)
         var event = data["event"];
         try {
           const textView = root.getElementById("text-view");
@@ -89,20 +107,22 @@ window.customElements.define(
           textView.innerHTML += JSON.stringify(data);
           textView.innerHTML += "<br>";
         } catch (error) {
-
+          console.error(error);
         }
         switch (event) {
           case "show_loader": {
             // Show some loader here
-            // toggleLoader(true);
+            toggleLoader(true);
           }
           break;
           case "hide_loader": {
           // Hide Loader
+            toggleLoader(false);
           }
           break;
           case "initiate_result": {
             // Get the payload
+            toggleLoader(false);
             let payload = data["payload"];
             console.log("initiate result: ", data)
           }
@@ -115,8 +135,7 @@ window.customElements.define(
           break;
           default:
             //Error handling
-            let payload = data;
-            console.log("process result: ", payload)
+            console.log("process result: ", data)
             break;
         }
       });
@@ -233,8 +252,13 @@ window.customElements.define(
       const self = this;
 
       const textView = self.shadowRoot.getElementById("text-view");
-      self.shadowRoot.querySelector("#create_hyper_btn").addEventListener("click", async (e) => {
-        await HyperServices.createHyperServices();
+      self.shadowRoot.querySelector("#create_hyper_btn").addEventListener("click", () => {
+        toggleLoader(true);
+        HyperServices.createHyperServices(merchantData.clientId, "in.juspay.hyperpay").then((h) => {
+          // Any other API call can be done here.
+        }).catch((err) => {
+          console.error(err.message);
+        })
       })
 
       self.shadowRoot.querySelector("#prefetch_btn").addEventListener("click", async () => {
@@ -249,7 +273,7 @@ window.customElements.define(
           textView.innerHTML += "<p>Prefetch Payload</p>";
           textView.innerHTML += JSON.stringify(payload);
         } catch (error) {
-
+          console.error(error);
         }
         await HyperServices.preFetch(payload);
       })
@@ -264,20 +288,29 @@ window.customElements.define(
               merchantId: merchantData.merchantId,
               clientId: merchantData.clientId,
               environment: "sandbox",
+              integrationType: "iframe",
+              hyperSDKDiv: "iframeJuspay"
             },
           };
           try {
             textView.innerHTML += "<br><p>Initiate Payload</p>";
             textView.innerHTML += JSON.stringify(initiatePayload);
           } catch (error) {
-
+            console.error(error);
           }
-          await HyperServices.initiate(initiatePayload);
+          toggleLoader(true);
+          HyperServices.initiate(initiatePayload).then(() => {
+            toggleLoader(false);
+          }).catch((error) => {
+            console.error(error);
+          });
         } catch (e) {
           textView.innerHTML += "<p>Initiate failed!</p>";
+          toggleLoader(false);
           console.warn('Initiate failed', e);
         }
       });
+
 
       self.shadowRoot.querySelector("#is_init_btn").addEventListener("click", async (e) => {
         var { isInitialised } = await HyperServices.isInitialised();
@@ -286,7 +319,7 @@ window.customElements.define(
           textView.innerHTML += "<br><span>Initialised? = </span>";
           textView.innerHTML += isInitialised;
         } catch (error) {
-
+          console.error(error);
         }
       })
 
@@ -300,7 +333,7 @@ window.customElements.define(
             customer_id: "9742144874",
             customer_phone: "9742144874",
             customer_email: "test007@gmail.com",
-            return_url: "https://sandbox.juspay.in/end"
+            return_url: "http://localhost:3000/"
           }
           let signature = getSignature(orderDetailsPayload);
           const processPayload = {
@@ -320,11 +353,13 @@ window.customElements.define(
             textView.innerHTML += JSON.stringify(processPayload);
             textView.innerHTML += "<br>";
           } catch (error) {
-
+            console.error(error);
           }
+          toggleLoader(true);
           await HyperServices.process(processPayload);
         } catch (e) {
-          console.warn('Process Failed: ', e);
+          toggleLoader(false);
+          console.error('Process Failed: ', e);
         }
 
       })
@@ -340,7 +375,7 @@ window.customElements.define(
           textView.innerHTML += isNull;
           textView.innerHTML += "<br>";
         } catch (e) {
-
+          console.error(e);
         }
       })
     }

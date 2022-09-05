@@ -41,18 +41,14 @@ public class HyperServicesPlugin extends Plugin {
             FragmentActivity activity = getActivity();
 
             if (activity == null) {
-                SdkTracker.trackBootLifecycle(
-                        PaymentConstants.SubCategory.LifeCycle.HYPER_SDK,
-                        PaymentConstants.LogLevel.ERROR,
-                        SDK_TRACKER_LABEL,
-                        "createHyperServices",
-                        "activity is null");
+                call.reject("createHyperServices failed: Activity is null");
                 return;
             }
             if (hyperServices == null) {
                 hyperServices = new HyperServices(activity);
             }
             hyperServices.resetActivity();
+            call.resolve();
         }
     }
 
@@ -62,8 +58,10 @@ public class HyperServicesPlugin extends Plugin {
             JSONObject payload = call.getData();
             FragmentActivity activity = getActivity();
             HyperServices.preFetch(activity, payload);
+            call.resolve();
         } catch (Exception e) {
             e.printStackTrace();
+            call.reject(e.getMessage());
         }
     }
 
@@ -90,6 +88,7 @@ public class HyperServicesPlugin extends Plugin {
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "activity is null");
+                    call.reject("Initiate Failed: Activity is null");
                     return;
                 }
 
@@ -119,7 +118,9 @@ public class HyperServicesPlugin extends Plugin {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
+                call.reject(e.getMessage());
             }
+            call.resolve();
         }
     }
 
@@ -137,7 +138,7 @@ public class HyperServicesPlugin extends Plugin {
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "activity is null");
-                    call.reject("Activity is Null");
+                    call.reject("process failed: Activity is Null");
                     return;
                 }
 
@@ -170,6 +171,7 @@ public class HyperServicesPlugin extends Plugin {
             }
         }
         hyperServices = null;
+        call.resolve();
     }
 
     @PluginMethod

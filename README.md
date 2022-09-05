@@ -56,7 +56,6 @@ Run the following command inside the ios folder of your project:
 pod install
 ```
 __________________
-
 ### Import HyperSDK
 
 ```ts
@@ -81,6 +80,16 @@ This method creates an instance of `HyperServices` class in the Capacitor Plugin
 
 ```javascript
 await HyperServices.createHyperServices();
+```
+
+**Note**: For Web, following parameters should be passed createHyperServices API.
+- clientId : "Client shared by Juspay"
+- service :
+     - `"in.juspay.hyperpay"` (For Payment Page)
+     - `"in.juspay.hyperapi"` (For Express Checkout)
+
+```javascript
+await HyperServices.createHyperServices(clientId, service)
 ```
 
 --------------------
@@ -166,6 +175,12 @@ HyperServices.addListener('HyperEvent', async (data) => {
    }
 });
 ```
+
+#### WEB
+Documentation : https://developer.juspay.in/v5.1/docs/introduction
+Once the payment is complete the user is redirected to the return_url configured by you. Following is the typical destination where the user is taken to:
+Payment Response : https://developer.juspay.in/docs/integration#section-payment-response
+
 --------------------
 ### Step-5: Android Hardware Back-Press Handling
 
