@@ -218,3 +218,7 @@ This is a helper method and can be used to check whether the `HyperServices` obj
 var { isNull } = await HyperServices.isNull();
 ```
 
+# License
+
+hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://bitbucket.org/juspay/hyper-sdk-capacitor/src/main/LICENSE.md).
+

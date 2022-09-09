@@ -14,7 +14,7 @@
     "HyperSdkCapacitor.podspec"
   ],
   "author": "Juspay Technologies Pvt. Ltd.",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+https://bitbucket.org/juspay/hyper-sdk-capacitor.git"
