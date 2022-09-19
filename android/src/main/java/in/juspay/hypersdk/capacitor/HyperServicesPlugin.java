@@ -47,7 +47,6 @@ public class HyperServicesPlugin extends Plugin {
             if (hyperServices == null) {
                 hyperServices = new HyperServices(activity);
             }
-            hyperServices.resetActivity();
             call.resolve();
         }
     }

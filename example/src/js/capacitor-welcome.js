@@ -256,7 +256,9 @@ window.customElements.define(
         toggleLoader(true);
         HyperServices.createHyperServices(merchantData.clientId, "in.juspay.hyperpay").then((h) => {
           // Any other API call can be done here.
+          toggleLoader(false);
         }).catch((err) => {
+          toggleLoader(false);
           console.error(err.message);
         })
       })
