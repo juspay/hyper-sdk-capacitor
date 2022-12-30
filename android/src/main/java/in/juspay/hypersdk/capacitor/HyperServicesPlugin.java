@@ -1,13 +1,8 @@
 package in.juspay.hypersdk.capacitor;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.getcapacitor.Bridge;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -17,11 +12,11 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import in.juspay.hypersdk.core.PaymentConstants;
+import in.juspay.hyper.constants.LogLevel;
+import in.juspay.hyper.constants.LogSubCategory;
 import in.juspay.hypersdk.core.SdkTracker;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
-import in.juspay.hypersdk.ui.RequestPermissionDelegate;
 import in.juspay.services.HyperServices;
 
 @CapacitorPlugin(name = "HyperServices")
@@ -82,8 +77,8 @@ public class HyperServicesPlugin extends Plugin {
 
                 if (activity == null) {
                     SdkTracker.trackBootLifecycle(
-                            PaymentConstants.SubCategory.LifeCycle.HYPER_SDK,
-                            PaymentConstants.LogLevel.ERROR,
+                            LogSubCategory.LifeCycle.HYPER_SDK,
+                            LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "activity is null");
@@ -93,8 +88,8 @@ public class HyperServicesPlugin extends Plugin {
 
                 if (hyperServices == null) {
                     SdkTracker.trackBootLifecycle(
-                            PaymentConstants.SubCategory.LifeCycle.HYPER_SDK,
-                            PaymentConstants.LogLevel.ERROR,
+                            LogSubCategory.LifeCycle.HYPER_SDK,
+                            LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "hyperServices is null");
@@ -132,8 +127,8 @@ public class HyperServicesPlugin extends Plugin {
 
                 if (activity == null) {
                     SdkTracker.trackBootLifecycle(
-                            PaymentConstants.SubCategory.LifeCycle.HYPER_SDK,
-                            PaymentConstants.LogLevel.ERROR,
+                            LogSubCategory.LifeCycle.HYPER_SDK,
+                            LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "activity is null");
@@ -143,8 +138,8 @@ public class HyperServicesPlugin extends Plugin {
 
                 if (hyperServices == null) {
                     SdkTracker.trackBootLifecycle(
-                            PaymentConstants.SubCategory.LifeCycle.HYPER_SDK,
-                            PaymentConstants.LogLevel.ERROR,
+                            LogSubCategory.LifeCycle.HYPER_SDK,
+                            LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
                             "hyperServices is null");
