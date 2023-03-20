@@ -2,6 +2,10 @@
 
 buildscript {
 
+    ext {
+        clientId = 'picasso'
+        hyperSDKVersion = '2.1.12'
+    }
     repositories {
         google()
         mavenCentral()
@@ -21,9 +25,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url "https://maven.juspay.in/jp-build-packages/hyper-sdk/"
-        }
+        maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
     }
 }
 

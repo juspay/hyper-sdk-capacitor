@@ -1,12 +1,14 @@
 # HYPER-SDK-CAPACITOR
 
 Capacitor Wrapper over HyperSDK which enables payment orchestration via different dynamic modules. More details available at Juspay Developer Docs for [Express Checkout SDK](https://developer.juspay.in/v2.0/docs/introduction) and [Payment Page SDK](https://developer.juspay.in/v4.0/docs/introduction).
+
 ## Install
 
 ```bash
 npm install hyper-sdk-capacitor
 npx cap sync
 ```
+
 ### Android
 
 Add following maven url in root build.gradle:
@@ -16,19 +18,39 @@ allprojects {
     repositories {
         ....
         ....
-        maven {
-            url "https://maven.juspay.in/jp-build-packages/hyper-sdk/"
-        }
+        maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
     }
 }
 ```
+
+#### **Updating Client ID (2.1.x and above)**
+
+Add the clientId ext property in root(top) `build.gradle`:
+
+```groovy
+buildscript {
+    ....
+    ext {
+        ....
+        clientId = "<clientId shared by Juspay team>"
+        hyperSDKVersion = "2.1.12"
+        ....
+    }
+    ....
+}
+```
+
+This is the same clientId present earlier in the `MerchantConfig.txt` file.
+
+Optionally, you can also provide an override for base SDK version present in plugin (the newer version among both would be considered).
+
+#### **Updating Client ID (2.0.x) [Deprecated]**
 
 Place the `MerchantConfig.txt` file alongside the root(top) `build.gradle` file. The contents of the file should be as follows.
 
 ```txt
 clientId = <clientId shared by Juspay Team>
 ```
-
 
 ### iOS
 
@@ -39,6 +61,7 @@ clientId = <clientId shared by Juspay Team>
 ```
 
 Add below post_install script in the Podfile
+
 ```sh
 post_install do |installer|
  fuse_path = "./Pods/HyperSDK/Fuse.rb"
@@ -55,7 +78,9 @@ Run the following command inside the ios folder of your project:
 ```sh
 pod install
 ```
+
 __________________
+
 ### Import HyperSDK
 
 ```ts
@@ -66,13 +91,16 @@ const { HyperServices } = Plugins;
 ```
 
 ### Prefetch
+
 To keep the SDK up to date with the latest changes, it is highly recommended to call preFetch as early as possible. It takes a `JSON Object` as its argument.
 
 ```javascript
 await HyperServices.preFetch(payload);
 ```
---------------------
-###  Step-1: Create HyperServices Object
+
+__________________
+
+### Step-1: Create HyperServices Object
 
 This method creates an instance of `HyperServices` class in the Capacitor Plugin on which all the `HyperSDK` APIs / methods are triggered. It internally uses the current activity as an argument.
 
@@ -83,34 +111,37 @@ await HyperServices.createHyperServices();
 ```
 
 **Note**: For Web, following parameters should be passed createHyperServices API.
+
 - clientId : "Client shared by Juspay"
 - service :
-     - `"in.juspay.hyperpay"` (For Payment Page)
-     - `"in.juspay.hyperapi"` (For Express Checkout)
+  - `"in.juspay.hyperpay"` (For Payment Page)
+  - `"in.juspay.hyperapi"` (For Express Checkout)
 
 ```javascript
 await HyperServices.createHyperServices(clientId, service)
 ```
 
---------------------
+__________________
 
 ### Step-2: Initiate
 
 This method should be called on the render of the host screen. This will boot up the SDK and start the Hyper engine. It takes a `JSON Object` as its argument which will contain the base parameters for the entire session and remains static throughout one SDK instance lifetime.
 
-
 **Notes**:
+
 1. It is highly recommended to initiate SDK from the order summary page (at least 5 seconds before opening your payment page) for seamless user experience.
 2. `initiate` should be called only once in one session.
 
 ```javascript
 await HyperServices.initiate(initiatePayload);
 ```
+
 Follow the documentation for [initiatePayload](https://developer.juspay.in/v4.0/docs/initiate-payload)
 
---------------------
+__________________
 
 ### To check if SDK is initialized or not
+
 ```javascript
 var { isInitialised } = await HyperServices.isInitialised();
 ```
@@ -132,9 +163,10 @@ The result of the process call is provided in the `Hyper Event listener`, later 
 await HyperServices.process(processPayload);
 
 ```
+
 Follow the documentation for [Process Payload](https://developer.juspay.in/v4.0/docs/process-payload) :
 
---------------------------------
+__________________
 
 ### Step-4: Listen to events from HyperSDK
 
@@ -177,11 +209,13 @@ HyperServices.addListener('HyperEvent', async (data) => {
 ```
 
 #### WEB
-Documentation : https://developer.juspay.in/v5.1/docs/introduction
-Once the payment is complete the user is redirected to the return_url configured by you. Following is the typical destination where the user is taken to:
-Payment Response : https://developer.juspay.in/docs/integration#section-payment-response
 
---------------------
+Documentation : <https://developer.juspay.in/v5.1/docs/introduction>
+Once the payment is complete the user is redirected to the return_url configured by you. Following is the typical destination where the user is taken to:
+Payment Response : <https://developer.juspay.in/docs/integration#section-payment-response>
+
+__________________
+
 ### Step-5: Android Hardware Back-Press Handling
 
 `HyperSDK` internally uses an android fragment for opening the bank page and will need the control to hardware back press when the bank page is active. This can be done by invoking `addEventListener` on the `backButton` provided by React Capacitor.
@@ -201,14 +235,19 @@ App.addListener('backButton', async (data) => {
   }
 });
 ```
---------------------
-### Terminate SDK :
+
+__________________
+
+### Terminate SDK
+
 This method shall be triggered when `HyperSDK` is no longer required.
 Note : After calling terminate, initiate has to be called again.
+
 ```javascript
 await HyperServices.terminate();
 ```
---------------------
+
+__________________
 
 ### Helper Method: Is Null
 
@@ -218,7 +257,6 @@ This is a helper method and can be used to check whether the `HyperServices` obj
 var { isNull } = await HyperServices.isNull();
 ```
 
-# License
+## License
 
-hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://bitbucket.org/juspay/hyper-sdk-capacitor/src/main/LICENSE.md).
-
+hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://bitbucket.org/juspay/hyper-sdk-capacitor/src/main/LICENSE.md) license.
