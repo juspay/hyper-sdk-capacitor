@@ -23,7 +23,7 @@ allprojects {
 }
 ```
 
-#### **Updating Client ID (2.1.x and above)**
+#### **Updating Client ID (3.0.0 and above)**
 
 Add the clientId ext property in root(top) `build.gradle`:
 
