@@ -9,7 +9,7 @@ buildscript {
         maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'in.juspay:hypersdk.plugin:2.0.2'
     }
 }
@@ -17,6 +17,7 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
+    namespace "in.juspay.hypersdk.capacitor"
     compileSdkVersion project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 32
     defaultConfig {
         minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22

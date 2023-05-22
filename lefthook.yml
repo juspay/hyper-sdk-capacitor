@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: npm run lint
+    fmt:
+      run: npm run fmt
+# commit-msg:
+#   parallel: true
+#   commands:
+#     commitlint:
+#       run: npm run commitlint --edit

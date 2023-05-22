@@ -10,24 +10,24 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pods": "cd ios/App && pod-install --quiet"
   },
   "dependencies": {
-    "@capacitor/android": "^4.0.0",
-    "@capacitor/app": "^4.0.0",
-    "@capacitor/camera": "latest",
-    "@capacitor/core": "latest",
-    "@capacitor/ios": "^4.0.0",
-    "@capacitor/splash-screen": "latest",
+    "@capacitor/android": "^4.7.0",
+    "@capacitor/app": "^4.1.1",
+    "@capacitor/ios": "^4.7.0",
+    "@capacitor/splash-screen": "^4.2.0",
     "hyper-sdk-capacitor": "file:.."
   },
   "devDependencies": {
-    "@capacitor/cli": "latest",
-    "vite": "^2.9.13",
+    "@capacitor/cli": "^4.7.0",
     "jsrsasign": "^10.2.0",
-    "jsrsasign-util": "^1.0.5"
+    "jsrsasign-util": "^1.0.5",
+    "pod-install": "^0.1.38",
+    "vite": "^2.9.13"
   },
   "author": "",
   "license": "ISC",
-  "hyperSdkIOSVersion": "2.1.15"
+  "hyperSdkIOSVersion": "2.1.23"
 }

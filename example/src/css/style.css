@@ -6,14 +6,14 @@ body {
 
 #iframeJuspay {
   top: 0;
-  left:0;
-  bottom:0;
-  right:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   height: 500px;
   width: 768px;
   overflow: auto;
   border: 2px solid blue;
-  background: "#f4f4f4";
+  background: '#f4f4f4';
   margin-top: 24px;
 }
 
@@ -26,7 +26,6 @@ body {
   left: 0px;
   display: none;
 }
-
 
 .lds-ring {
   display: inline-block;
@@ -65,10 +64,10 @@ body {
 
 @keyframes lds-ring {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }

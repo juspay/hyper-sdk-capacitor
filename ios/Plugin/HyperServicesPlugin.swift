@@ -5,18 +5,18 @@ import HyperSDK
 @objc(HyperServicesPlugin)
 public class HyperServicesPlugin: CAPPlugin {
 
-    var hyperInstance : HyperServices!
+    var hyperInstance: HyperServices!
 
     @objc func createHyperServices(_ call: CAPPluginCall) {
-        if (hyperInstance == nil) {
-            hyperInstance = HyperServices();
+        if hyperInstance == nil {
+            hyperInstance = HyperServices()
         }
         call.resolve()
     }
 
     @objc func preFetch(_ call: CAPPluginCall) {
-        let payload = call.options;
-        if ((payload) != nil) {
+        let payload = call.options
+        if (payload) != nil {
             print(payload ?? "")
             DispatchQueue.main.sync {
                 HyperServices.preFetch(payload!)
@@ -28,13 +28,13 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func initiate(_ call: CAPPluginCall) {
-        var topController : UIViewController!
-        let payload = call.options;
-        if (self.hyperInstance == nil) {
+        var topController: UIViewController!
+        let payload = call.options
+        if self.hyperInstance == nil {
             call.reject("Create a Hyper SDK Instance before calling Initiate", nil, nil, nil)
             return
         }
-        if (payload != nil && (payload?.keys.count)! > 0) {
+        if payload != nil && (payload?.keys.count)! > 0 {
             DispatchQueue.main.sync {
                 topController = topViewController
                 self.hyperInstance.initiate(topController, payload: payload!, callback: { [self] response in
@@ -46,7 +46,7 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func isInitialised(_ call: CAPPluginCall) {
-        if (hyperInstance == nil) {
+        if hyperInstance == nil {
             call.reject("Create a Hyper SDK Instance before calling isInitialised", nil, nil, nil)
             return
         }
@@ -54,16 +54,16 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func process(_ call: CAPPluginCall) {
-        if (hyperInstance == nil) {
+        if hyperInstance == nil {
             call.reject("Create a Hyper SDK Instance before calling process", nil, nil, nil)
             return
         }
-        if (!hyperInstance.isInitialised()) {
+        if !hyperInstance.isInitialised() {
             call.reject("Initiate should be done before calling process", nil, nil, nil)
             return
         }
-        let payload = call.options;
-        if (payload != nil && (payload?.keys.count)! > 0) {
+        let payload = call.options
+        if payload != nil && (payload?.keys.count)! > 0 {
             DispatchQueue.main.sync {
                 self.hyperInstance.process(payload)
             }
@@ -72,7 +72,7 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func terminate(_ call: CAPPluginCall) {
-        if (self.hyperInstance != nil) {
+        if self.hyperInstance != nil {
             self.hyperInstance.terminate()
         }
         self.hyperInstance = nil
@@ -80,8 +80,8 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func updateBaseViewController(_ call: CAPPluginCall) {
-        if ((self.hyperInstance != nil) && self.hyperInstance.isInitialised()) {
-            self.hyperInstance.baseViewController = self.topViewController;
+        if (self.hyperInstance != nil) && self.hyperInstance.isInitialised() {
+            self.hyperInstance.baseViewController = self.topViewController
         }
     }
 
@@ -93,10 +93,10 @@ public class HyperServicesPlugin: CAPPlugin {
         if viewController is UITabBarController {
             let tabBarController = viewController as? UITabBarController
             return topViewControllerWithRootViewController(viewController: tabBarController?.selectedViewController)
-        } else if (viewController is UINavigationController) {
+        } else if viewController is UINavigationController {
             let navContObj = viewController as? UINavigationController
             return self.topViewControllerWithRootViewController(viewController: navContObj?.visibleViewController)
-        } else if ((viewController?.presentedViewController != nil) && !(viewController?.presentedViewController?.isBeingDismissed != nil)) {
+        } else if (viewController?.presentedViewController != nil) && !(viewController?.presentedViewController?.isBeingDismissed != nil) {
             let presentedViewController = viewController?.presentedViewController
             return self.topViewControllerWithRootViewController(viewController: presentedViewController)
         } else {

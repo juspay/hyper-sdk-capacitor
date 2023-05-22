@@ -4,7 +4,6 @@ node_modules
 
 # iOS files
 Pods
-Podfile.lock
 Build
 xcuserdata
 
@@ -14,7 +13,6 @@ xcuserdata
 
 
 # Based on Android gitignore template: https://github.com/github/gitignore/blob/HEAD/Android.gitignore
-example/src/js/creds.js
 
 # Built application files
 *.apk

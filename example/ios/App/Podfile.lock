@@ -1,0 +1,55 @@
+PODS:
+  - Capacitor (4.8.0):
+    - CapacitorCordova
+  - CapacitorApp (4.1.1):
+    - Capacitor
+  - CapacitorCordova (4.8.0)
+  - CapacitorSplashScreen (4.2.0):
+    - Capacitor
+  - HyperSDK (2.1.23):
+    - JuspaySafeBrowser (= 0.1.77)
+    - Salvator (= 1.0.2)
+  - HyperSdkCapacitor (3.0.0):
+    - Capacitor
+    - HyperSDK (= 2.1.23)
+  - JuspaySafeBrowser (0.1.77)
+  - Salvator (1.0.2)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
+  - HyperSdkCapacitor (from `../../..`)
+
+SPEC REPOS:
+  trunk:
+    - HyperSDK
+    - JuspaySafeBrowser
+    - Salvator
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
+  HyperSdkCapacitor:
+    :path: "../../.."
+
+SPEC CHECKSUMS:
+  Capacitor: 6002aadd64492438e5242325025045235dcb7e84
+  CapacitorApp: acd42fe8561fe751ad5b5f459aa85e6acd7bee24
+  CapacitorCordova: c6249dcb2cf04dd835c0e99df1df4b9c8ad997e2
+  CapacitorSplashScreen: 6b1c832e6f822ad1ef05073dc31dfeca02bc03a3
+  HyperSDK: 6ed505c2cb997444bad0fd6eebce6e2bc685f82f
+  HyperSdkCapacitor: 97b72a552d1499982cf31cda3e8c1845010ceedf
+  JuspaySafeBrowser: 039d54b068d7ca314866fa8a2d111ad98f3daea2
+  Salvator: 084905ad83586b10de2c283c87b9241fefac5405
+
+PODFILE CHECKSUM: ebf31f16be29d1c16022be70f96245b358af5a4e
+
+COCOAPODS: 1.11.3

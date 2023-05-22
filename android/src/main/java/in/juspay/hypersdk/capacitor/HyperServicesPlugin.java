@@ -9,15 +9,15 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import in.juspay.hyper.constants.LogLevel;
 import in.juspay.hyper.constants.LogSubCategory;
 import in.juspay.hypersdk.core.SdkTracker;
 import in.juspay.hypersdk.data.JuspayResponseHandler;
 import in.juspay.hypersdk.ui.HyperPaymentsCallbackAdapter;
 import in.juspay.services.HyperServices;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @CapacitorPlugin(name = "HyperServices")
 public class HyperServicesPlugin extends Plugin {
@@ -81,7 +81,8 @@ public class HyperServicesPlugin extends Plugin {
                             LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
-                            "activity is null");
+                            "activity is null"
+                    );
                     call.reject("Initiate Failed: Activity is null");
                     return;
                 }
@@ -92,24 +93,29 @@ public class HyperServicesPlugin extends Plugin {
                             LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
-                            "hyperServices is null");
+                            "hyperServices is null"
+                    );
                     call.reject("HyperServices is null, create a HyperSDK instance before calling initiate");
                     return;
                 }
-                hyperServices.initiate(activity, payload, new HyperPaymentsCallbackAdapter() {
-                    @Override
-                    public void onEvent(JSONObject data, JuspayResponseHandler handler) {
-                        // Send out the event to the merchant on JS side
-                        JSObject response;
-                        try {
-                            response = JSObject.fromJSONObject(data);
-                        } catch (JSONException e) {
-                            response = new JSObject();
-                        }
+                hyperServices.initiate(
+                        activity,
+                        payload,
+                        new HyperPaymentsCallbackAdapter() {
+                            @Override
+                            public void onEvent(JSONObject data, JuspayResponseHandler handler) {
+                                // Send out the event to the merchant on JS side
+                                JSObject response;
+                                try {
+                                    response = JSObject.fromJSONObject(data);
+                                } catch (JSONException e) {
+                                    response = new JSObject();
+                                }
 
-                        notifyListeners(HYPER_EVENT, response);
-                    }
-                });
+                                notifyListeners(HYPER_EVENT, response);
+                            }
+                        }
+                );
             } catch (Exception e) {
                 e.printStackTrace();
                 call.reject(e.getMessage());
@@ -131,7 +137,8 @@ public class HyperServicesPlugin extends Plugin {
                             LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
-                            "activity is null");
+                            "activity is null"
+                    );
                     call.reject("process failed: Activity is Null");
                     return;
                 }
@@ -142,7 +149,8 @@ public class HyperServicesPlugin extends Plugin {
                             LogLevel.ERROR,
                             SDK_TRACKER_LABEL,
                             "initiate",
-                            "hyperServices is null");
+                            "hyperServices is null"
+                    );
                     call.reject("HyperServices instance is Null");
                     return;
                 }

@@ -1,5 +1,4 @@
 export interface HyperServicesPlugin {
-
   createHyperServices(clientId?: string, service?: string): Promise<void>;
 
   preFetch(payload: any): Promise<void>;
