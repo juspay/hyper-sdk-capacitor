@@ -259,4 +259,4 @@ var { isNull } = await HyperServices.isNull();
 
 ## License
 
-hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://bitbucket.org/juspay/hyper-sdk-capacitor/src/main/LICENSE.md) license.
+hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://github.com/juspay/hyper-sdk-capacitor/src/main/LICENSE.md) license.
