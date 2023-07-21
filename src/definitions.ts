@@ -10,7 +10,7 @@ export interface HyperServicesPlugin {
 
   preFetch(payload: any): Promise<void>;
 
-  initiate(payload: string): Promise<void>;
+  initiate(payload: any): Promise<void>;
 
   process(payload: any): Promise<void>;
 
