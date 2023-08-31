@@ -9,6 +9,7 @@
 /* eslint-disable no-undef */
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { HyperServices } from 'hyper-sdk-capacitor';
 import * as KJUR from 'jsrsasign';
 
@@ -94,7 +95,7 @@ window.customElements.define(
       super();
 
       SplashScreen.hide();
-
+      defineCustomElements(window);
       const root = this.attachShadow({ mode: 'open' });
 
       console.warn('HyperServices', HyperServices);
