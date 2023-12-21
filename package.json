@@ -1,6 +1,6 @@
 {
   "name": "hyper-sdk-capacitor",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Capacitor Wrapper over HyperSDK",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
