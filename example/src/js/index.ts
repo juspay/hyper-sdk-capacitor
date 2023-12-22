@@ -22,18 +22,18 @@ merchantData has the following values [Get these values from Juspay Team]
 */
 const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
+    const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 };
 
 const newOrderId = () => {
-  var result = '';
-  var characters =
+  let result = '';
+  const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < 10; i++) {
+  const charactersLength = characters.length;
+  for (let i = 0; i < 10; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
@@ -51,20 +51,20 @@ function hexToBase64(hexstring) {
 }
 
 function generateSignature(privateKey, payload) {
-  var rsaKey = new KJUR.RSAKey();
+  const rsaKey = new KJUR.RSAKey();
   rsaKey.readPrivateKeyFromPEMString(privateKey);
-  var sig = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' });
+  const sig = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' });
   sig.init(rsaKey);
   sig.updateString(payload);
-  var sigValueHex = sig.sign();
-  var base64String = hexToBase64(sigValueHex);
+  const sigValueHex = sig.sign();
+  const base64String = hexToBase64(sigValueHex);
   return base64String;
 }
 
 const getSignature = signatureJson => {
-  var signatureJsonString = JSON.stringify(signatureJson);
+  const signatureJsonString = JSON.stringify(signatureJson);
 
-  var privateKey = merchantData.privateKey;
+  let privateKey = merchantData.privateKey;
   if (!privateKey.startsWith('-----BEGIN RSA PRIVATE KEY-----\n')) {
     privateKey = '-----BEGIN RSA PRIVATE KEY-----\n' + privateKey;
   }
@@ -76,13 +76,13 @@ const getSignature = signatureJson => {
 };
 
 const toggleLoader = status => {
-  var loader = document.getElementById('loaderDIV');
+  const loader = document.getElementById('loaderDIV');
   if (status) {
-    if (loader.style.display === 'none' || loader.style.display === '') {
+    if (loader?.style.display === 'none' || loader?.style.display === '') {
       loader.style.display = 'block';
     }
   } else {
-    if (loader.style.display === 'block') {
+    if (loader?.style.display === 'block') {
       loader.style.display = 'none';
     }
   }
@@ -102,12 +102,14 @@ window.customElements.define(
 
       HyperServices.addListener('HyperEvent', async data => {
         console.error('SDK Event : ', data);
-        var event = data['event'];
+        const event = data['event'];
         try {
           const textView = root.getElementById('text-view');
-          textView.innerHTML += '<p>SDK Event</p>';
-          textView.innerHTML += JSON.stringify(data);
-          textView.innerHTML += '<br>';
+          if (textView) {
+            textView.innerHTML += '<p>SDK Event</p>';
+            textView.innerHTML += JSON.stringify(data);
+            textView.innerHTML += '<br>';
+          }
         } catch (error) {
           console.error(error);
         }
@@ -255,154 +257,168 @@ window.customElements.define(
     connectedCallback() {
       const self = this;
 
-      const textView = self.shadowRoot.getElementById('text-view');
-      self.shadowRoot
-        .querySelector('#create_hyper_btn')
-        .addEventListener('click', () => {
-          toggleLoader(true);
-          HyperServices.createHyperServices(
-            merchantData.clientId,
-            'in.juspay.hyperpay',
-          )
-            .then(_h => {
-              // Any other API call can be done here.
-              toggleLoader(false);
-            })
-            .catch(err => {
-              toggleLoader(false);
-              console.error(err.message);
-            });
-        });
-
-      self.shadowRoot
-        .querySelector('#prefetch_btn')
-        .addEventListener('click', async () => {
-          const payload = {
-            requestId: uuidv4(),
-            service: 'in.juspay.hyperpay',
-            payload: {
-              clientId: merchantData.clientId,
-            },
-          };
-          try {
-            textView.innerHTML += '<p>Prefetch Payload</p>';
-            textView.innerHTML += JSON.stringify(payload);
-          } catch (error) {
-            console.error(error);
-          }
-          await HyperServices.preFetch(payload);
-        });
-
-      self.shadowRoot
-        .querySelector('#init_btn')
-        .addEventListener('click', async function (_e) {
-          try {
-            var initiatePayload = {
-              service: 'in.juspay.hyperpay',
-              requestId: uuidv4(),
-              payload: {
-                action: 'initiate',
-                merchantId: merchantData.merchantId,
-                clientId: merchantData.clientId,
-                environment: 'sandbox',
-                integrationType: 'iframe',
-                hyperSDKDiv: 'iframeJuspay',
-              },
-            };
-            try {
-              textView.innerHTML += '<br><p>Initiate Payload</p>';
-              textView.innerHTML += JSON.stringify(initiatePayload);
-            } catch (error) {
-              console.error(error);
-            }
+      const textView = self.shadowRoot?.getElementById('text-view');
+      if (self.shadowRoot) {
+        self.shadowRoot
+          .querySelector('#create_hyper_btn')
+          ?.addEventListener('click', () => {
             toggleLoader(true);
-            HyperServices.initiate(initiatePayload)
-              .then(() => {
+            HyperServices.createHyperServices(
+              merchantData.clientId,
+              'in.juspay.hyperpay',
+            )
+              .then(_h => {
+                // Any other API call can be done here.
                 toggleLoader(false);
               })
-              .catch(error => {
-                console.error(error);
+              .catch(err => {
+                toggleLoader(false);
+                console.error(err.message);
               });
-          } catch (e) {
-            textView.innerHTML += '<p>Initiate failed!</p>';
-            toggleLoader(false);
-            console.warn('Initiate failed', e);
-          }
-        });
+          });
 
-      self.shadowRoot
-        .querySelector('#is_init_btn')
-        .addEventListener('click', async _e => {
-          var { isInitialised } = await HyperServices.isInitialised();
-          console.log('is SDK Initialised? ', isInitialised);
-          try {
-            textView.innerHTML += '<br><span>Initialised? = </span>';
-            textView.innerHTML += isInitialised;
-          } catch (error) {
-            console.error(error);
-          }
-        });
-
-      self.shadowRoot
-        .querySelector('#process_btn')
-        .addEventListener('click', async _e => {
-          try {
-            const orderDetailsPayload = {
-              order_id: 'DW-' + newOrderId(),
-              merchant_id: merchantData.merchantId,
-              amount: customerData.amount,
-              timestamp: Date.now().toString(),
-              customer_id: customerData.customerId,
-              customer_phone: customerData.mobile,
-              customer_email: customerData.email,
-              return_url: 'http://localhost:3000/',
-            };
-            let signature = getSignature(orderDetailsPayload);
-            const processPayload = {
+        self.shadowRoot
+          .querySelector('#prefetch_btn')
+          ?.addEventListener('click', async () => {
+            const payload = {
               requestId: uuidv4(),
               service: 'in.juspay.hyperpay',
               payload: {
-                action: 'paymentPage',
                 clientId: merchantData.clientId,
-                merchantKeyId: merchantData.merchantKeyId,
-                orderDetails: JSON.stringify(orderDetailsPayload),
-                signature: signature,
               },
             };
-            console.log('Process Payload: ', processPayload);
             try {
-              textView.innerHTML += '<br><p>Process Payload = </p>';
-              textView.innerHTML += JSON.stringify(processPayload);
-              textView.innerHTML += '<br>';
+              if (textView) {
+                textView.innerHTML += '<p>Prefetch Payload</p>';
+                textView.innerHTML += JSON.stringify(payload);
+              }
             } catch (error) {
               console.error(error);
             }
-            toggleLoader(true);
-            await HyperServices.process(processPayload);
-          } catch (e) {
-            toggleLoader(false);
-            console.error('Process Failed: ', e);
-          }
-        });
-      self.shadowRoot
-        .querySelector('#terminate')
-        .addEventListener('click', async _e => {
-          await HyperServices.terminate();
-        });
+            await HyperServices.preFetch(payload);
+          });
 
-      self.shadowRoot
-        .querySelector('#is_null')
-        .addEventListener('click', async _e => {
-          var { isNull } = await HyperServices.isNull();
-          console.log('is isNull? ', isNull);
-          try {
-            textView.innerHTML += '<br><span>isNull? = </span>';
-            textView.innerHTML += isNull;
-            textView.innerHTML += '<br>';
-          } catch (e) {
-            console.error(e);
-          }
-        });
+        self.shadowRoot
+          .querySelector('#init_btn')
+          ?.addEventListener('click', async function (_e) {
+            try {
+              const initiatePayload = {
+                service: 'in.juspay.hyperpay',
+                requestId: uuidv4(),
+                payload: {
+                  action: 'initiate',
+                  merchantId: merchantData.merchantId,
+                  clientId: merchantData.clientId,
+                  environment: 'sandbox',
+                  integrationType: 'iframe',
+                  hyperSDKDiv: 'iframeJuspay',
+                },
+              };
+              try {
+                if (textView) {
+                  textView.innerHTML += '<br><p>Initiate Payload</p>';
+                  textView.innerHTML += JSON.stringify(initiatePayload);
+                }
+              } catch (error) {
+                console.error(error);
+              }
+              toggleLoader(true);
+              HyperServices.initiate(initiatePayload)
+                .then(() => {
+                  toggleLoader(false);
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            } catch (e) {
+              if (textView) {
+                textView.innerHTML += '<p>Initiate failed!</p>';
+              }
+              toggleLoader(false);
+              console.warn('Initiate failed', e);
+            }
+          });
+
+        self.shadowRoot
+          .querySelector('#is_init_btn')
+          ?.addEventListener('click', async _e => {
+            const { isInitialised } = await HyperServices.isInitialised();
+            console.log('is SDK Initialised? ', isInitialised);
+            try {
+              if (textView) {
+                textView.innerHTML += '<br><span>Initialised? = </span>';
+                textView.innerHTML += isInitialised;
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          });
+
+        self.shadowRoot
+          .querySelector('#process_btn')
+          ?.addEventListener('click', async _e => {
+            try {
+              const orderDetailsPayload = {
+                order_id: 'DW-' + newOrderId(),
+                merchant_id: merchantData.merchantId,
+                amount: customerData.amount,
+                timestamp: Date.now().toString(),
+                customer_id: customerData.customerId,
+                customer_phone: customerData.mobile,
+                customer_email: customerData.email,
+                return_url: 'http://localhost:3000/',
+              };
+              const signature = getSignature(orderDetailsPayload);
+              const processPayload = {
+                requestId: uuidv4(),
+                service: 'in.juspay.hyperpay',
+                payload: {
+                  action: 'paymentPage',
+                  clientId: merchantData.clientId,
+                  merchantKeyId: merchantData.merchantKeyId,
+                  orderDetails: JSON.stringify(orderDetailsPayload),
+                  signature: signature,
+                },
+              };
+              console.log('Process Payload: ', processPayload);
+              try {
+                if (textView) {
+                  textView.innerHTML += '<br><p>Process Payload = </p>';
+                  textView.innerHTML += JSON.stringify(processPayload);
+                  textView.innerHTML += '<br>';
+                }
+              } catch (error) {
+                console.error(error);
+              }
+              toggleLoader(true);
+              await HyperServices.process(processPayload);
+            } catch (e) {
+              toggleLoader(false);
+              console.error('Process Failed: ', e);
+            }
+          });
+        self.shadowRoot
+          .querySelector('#terminate')
+          ?.addEventListener('click', async _e => {
+            await HyperServices.terminate();
+          });
+
+        self.shadowRoot
+          .querySelector('#is_null')
+          ?.addEventListener('click', async _e => {
+            const { isNull } = await HyperServices.isNull();
+            console.log('is isNull? ', isNull);
+            try {
+              if (textView) {
+                textView.innerHTML += '<br><span>isNull? = </span>';
+                textView.innerHTML += isNull;
+                textView.innerHTML += '<br>';
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          });
+      }
     }
   },
 );
