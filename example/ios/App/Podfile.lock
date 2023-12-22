@@ -6,14 +6,14 @@ PODS:
   - CapacitorCordova (4.8.0)
   - CapacitorSplashScreen (4.2.0):
     - Capacitor
-  - HyperSDK (2.1.23):
-    - JuspaySafeBrowser (= 0.1.77)
-    - Salvator (= 1.0.2)
-  - HyperSdkCapacitor (3.0.0):
+  - HyperSDK (2.1.30):
+    - JuspaySafeBrowser (= 0.1.78)
+    - Salvator (= 1.0.3)
+  - HyperSdkCapacitor (3.0.5):
     - Capacitor
-    - HyperSDK (= 2.1.23)
-  - JuspaySafeBrowser (0.1.77)
-  - Salvator (1.0.2)
+    - HyperSDK (= 2.1.30)
+  - JuspaySafeBrowser (0.1.78)
+  - Salvator (1.0.3)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -45,11 +45,11 @@ SPEC CHECKSUMS:
   CapacitorApp: acd42fe8561fe751ad5b5f459aa85e6acd7bee24
   CapacitorCordova: c6249dcb2cf04dd835c0e99df1df4b9c8ad997e2
   CapacitorSplashScreen: 6b1c832e6f822ad1ef05073dc31dfeca02bc03a3
-  HyperSDK: 6ed505c2cb997444bad0fd6eebce6e2bc685f82f
-  HyperSdkCapacitor: 97b72a552d1499982cf31cda3e8c1845010ceedf
-  JuspaySafeBrowser: 039d54b068d7ca314866fa8a2d111ad98f3daea2
-  Salvator: 084905ad83586b10de2c283c87b9241fefac5405
+  HyperSDK: 5447b52093505ac97cbbc471c064cd8bc7333d5f
+  HyperSdkCapacitor: 240dcd11ee2cd1b83f0ed11366148ef8a4456054
+  JuspaySafeBrowser: 33435cefcf2874f7386230005b29c063c4723890
+  Salvator: 97f82dc7c75b9bb52b41a74ac355c69443a2ecd1
 
 PODFILE CHECKSUM: ebf31f16be29d1c16022be70f96245b358af5a4e
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
