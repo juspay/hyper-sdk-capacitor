@@ -23,7 +23,7 @@ allprojects {
 }
 ```
 
-#### **Updating Client ID (3.0.0 and above)**
+#### **Updating Client ID**
 
 Add the clientId ext property in root(top) `build.gradle`:
 
@@ -40,17 +40,8 @@ buildscript {
 }
 ```
 
-This is the same clientId present earlier in the `MerchantConfig.txt` file.
-
 Optionally, you can also provide an override for base SDK version present in plugin (the newer version among both would be considered).
 
-#### **Updating Client ID (2.0.x) [Deprecated]**
-
-Place the `MerchantConfig.txt` file alongside the root(top) `build.gradle` file. The contents of the file should be as follows.
-
-```txt
-clientId = <clientId shared by Juspay Team>
-```
 
 ### iOS
 
