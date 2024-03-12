@@ -1,0 +1,106 @@
+name: Releases
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  build-on-pr:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: ${{ github.event.pull_request.commits }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm install
+
+  merged-pr:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && !contains(github.event.pull_request.title, '[skip ci]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          fetch-depth: ${{ github.event.pull_request.commits }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine release type
+        id: determine-release
+        run: |
+          shopt -s nocasematch
+
+          if [[ "${{ github.event.pull_request.title }}" =~ (\[breaking\]|\[major\]) ]]; then
+            echo "release_type=major" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.pull_request.title }}" =~ \[minor\] ]]; then
+            echo "release_type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "release_type=patch" >> $GITHUB_OUTPUT
+          fi
+
+          shopt -u nocasematch
+        shell: bash
+
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5.1.0
+        with:
+          github-token: ${{ secrets.RELEASE_TOKEN }}
+          release-count: 0
+          skip-version-file: "true"
+          skip-commit: "true"
+          git-push: "false"
+          skip-tag: "true"
+          skip-bump: "true"
+
+      - name: Stash changes
+        run: git reset --hard
+
+      - name: Run standard version
+        id: standard-version
+        run: |
+          npx standard-version --release-as ${{ steps.determine-release.outputs.release_type }}
+          echo "tag_name=$(git describe --abbrev=0 --tags)" >>$GITHUB_OUTPUT
+
+      - name: Push tags and changelog
+        run: git push --follow-tags origin main
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: "${{ steps.standard-version.outputs.tag_name }}"
+          release_name: "${{ steps.standard-version.outputs.tag_name }}"
+          body: "${{ steps.changelog.outputs.clean_changelog }}"
+
+      - name: Publish package on NPM 📦
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
