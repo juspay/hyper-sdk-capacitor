@@ -82,7 +82,7 @@ jobs:
         run: |
           git add .
           git commit -m "fix: adding changelog modifications"
-          gpf
+          git push
         env:
           GH_TOKEN: ${{ steps.generate_app_token.outputs.token}}
 
