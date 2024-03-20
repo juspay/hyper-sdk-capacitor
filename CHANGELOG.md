@@ -15,19 +15,6 @@ All notable changes to this project will be documented in this file. See [standa
 * update github actions ([2191f65](https://github.com/juspay/hyper-sdk-capacitor/commit/2191f6527e923b94b163e343422551b765dafd76))
 * updated release workflow token ([971fe3f](https://github.com/juspay/hyper-sdk-capacitor/commit/971fe3f7a1d9767fed3f98031b3258b4e5af1153))
 
-# [3.1.0](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.8...v3.1.0) (2024-03-20)
-
-
-### Bug Fixes
-
-* update github actions ([2191f65](https://github.com/juspay/hyper-sdk-capacitor/commit/2191f6527e923b94b163e343422551b765dafd76))
-* updated release workflow token ([971fe3f](https://github.com/juspay/hyper-sdk-capacitor/commit/971fe3f7a1d9767fed3f98031b3258b4e5af1153))
-
-
-### Features
-
-* adding github actions ([2ebca7b](https://github.com/juspay/hyper-sdk-capacitor/commit/2ebca7bfb26dfada52c9389ce89fc0f94e2ffa14))
-
 
 
 ## [3.0.8](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.7...v3.0.8) (2024-02-13)
