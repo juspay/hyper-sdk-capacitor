@@ -61,6 +61,7 @@ jobs:
           git-push: "false"
           skip-tag: "true"
           skip-bump: "true"
+          output-file: "false"
 
       - name: Stash changes
         run: git reset --hard
