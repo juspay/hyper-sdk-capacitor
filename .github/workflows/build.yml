@@ -2,7 +2,7 @@ name: Build
 on:
   pull_request:
     branches:
-      - main
+      - main-1
     types:
       - opened
       - reopened
