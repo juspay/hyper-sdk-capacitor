@@ -9,7 +9,7 @@ PODS:
   - HyperSDK (2.1.34):
     - JuspaySafeBrowser (= 0.1.80)
     - Salvator (= 1.0.5)
-  - HyperSdkCapacitor (3.0.6):
+  - HyperSdkCapacitor (3.0.9):
     - Capacitor
     - HyperSDK (= 2.1.34)
   - JuspaySafeBrowser (0.1.80)
@@ -46,7 +46,7 @@ SPEC CHECKSUMS:
   CapacitorCordova: c6249dcb2cf04dd835c0e99df1df4b9c8ad997e2
   CapacitorSplashScreen: 6b1c832e6f822ad1ef05073dc31dfeca02bc03a3
   HyperSDK: 69875c51c54cf27f77be8493d615e3ad5ddad6e2
-  HyperSdkCapacitor: f51cce1a3c98432e89476d1aede14d197c57f2cf
+  HyperSdkCapacitor: 300a944eb02f910643966a98d235f1b89bcfdb4a
   JuspaySafeBrowser: 7005eb12b612967cf9768d8370cf1ef9ae879880
   Salvator: 90f77a49b9a7e2b512088d0091ba540bdb5de0b1
 
