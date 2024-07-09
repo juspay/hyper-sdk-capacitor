@@ -69,13 +69,16 @@ public class HyperServicesPlugin: CAPPlugin {
             call.reject("Initiate should be done before calling process", nil, nil, nil)
             return
         }
-        let payload = call.options
-        if payload != nil && (payload?.keys.count)! > 0 {
-            DispatchQueue.main.sync {
-                self.hyperInstance.process(payload)
+        if let payload = call.options {
+            if (payload.keys.count) > 0 {
+                DispatchQueue.main.sync {
+                    self.hyperInstance.process(payload)
+                }
+                call.resolve()
+                return
             }
         }
-        call.resolve()
+        call.reject("Invalid process payload", nil, nil, nil)
     }
 
     @objc func terminate(_ call: CAPPluginCall) {

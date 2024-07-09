@@ -2,7 +2,7 @@ require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
-hyper_sdk_version = "2.1.37"
+hyper_sdk_version = "2.1.43"
 
 Pod::Spec.new do |s|
   s.name = 'HyperSdkCapacitor'
