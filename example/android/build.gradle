@@ -5,6 +5,7 @@ buildscript {
     ext {
         clientId = 'picasso'
         hyperSDKVersion = '2.1.25'
+        // excludedMicroSDKs = [] // To exclude some dependency added with hypersdk
     }
     repositories {
         google()
@@ -26,6 +27,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
+        maven { url "https://maven.getsimpl.com" }
     }
 }
 
