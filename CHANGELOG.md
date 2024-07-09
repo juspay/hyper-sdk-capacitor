@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.13](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.12...v3.0.13) (2024-07-09)
+
+
+### Bug Fixes
+
+* unwrap payload before sending it to HyperSDK ([8e2ed19](https://github.com/juspay/hyper-sdk-capacitor/commit/8e2ed1935ec8097e91f975252e46d1b58181d075))
+
 ### [3.0.12](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.11...v3.0.12) (2024-04-30)
 
 
