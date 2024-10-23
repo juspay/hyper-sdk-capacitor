@@ -26,8 +26,8 @@
     "jsrsasign": "^11.0.0",
     "jsrsasign-util": "^1.0.5",
     "pod-install": "^0.1.38",
-    "vite": "^2.9.13",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "vite": "^5.4.10"
   },
   "author": "",
   "license": "ISC",
