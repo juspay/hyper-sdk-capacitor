@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.15](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.14...v3.0.15) (2024-10-23)
+
+
+### Bug Fixes
+
+* fixed vulnerabilities in rollup and vite ([d2dcba9](https://github.com/juspay/hyper-sdk-capacitor/commit/d2dcba929e0b08a8b696cdc7ab38bd2d2c90e314))
+
 ### [3.0.14](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.13...v3.0.14) (2024-08-05)
 
 
