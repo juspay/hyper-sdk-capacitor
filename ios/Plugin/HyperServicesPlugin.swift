@@ -82,7 +82,6 @@ public class HyperServicesPlugin: CAPPlugin {
         call.reject("Invalid process payload", nil, nil, nil)
     }
 
-
     @objc func processWithViewController(_ call: CAPPluginCall) {
         if hyperInstance == nil {
             call.reject("Create a Hyper SDK Instance before calling process", nil, nil, nil)

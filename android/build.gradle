@@ -47,11 +47,14 @@ repositories {
     mavenCentral()
 }
 
-apply plugin: 'hypersdk.plugin'
+if (!rootProject.hasProperty('skipHyperSdk') || !rootProject.skipHyperSdk.toBoolean()) {
+    apply plugin: 'hypersdk.plugin'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
+    compileOnly "in.juspay:hypersdk:${getHyperSDKVersion(rootProject)}"
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
 }
 
@@ -66,7 +69,7 @@ static def mostRecentVersion(List<String> versions) {
 }
 
 static def getHyperSDKVersion(rootProject) {
-    def hyperSdkVersion = '2.1.25'
+    def hyperSdkVersion = '2.2.2'
     if (!rootProject.hasProperty('hyperSDKVersion')) {
         return hyperSdkVersion
     }
@@ -92,8 +95,10 @@ static def getClientId(rootProject) {
     return rootProject.clientId
 }
 
-hyperSdkPlugin {
-    clientId = getClientId(rootProject)
-    sdkVersion = getHyperSDKVersion(rootProject)
-    excludedMicroSDKs = getExcludedMicroSdks(rootProject)
+if (!rootProject.hasProperty('skipHyperSdk') || !rootProject.skipHyperSdk.toBoolean()) {
+    hyperSdkPlugin {
+        clientId = getClientId(rootProject)
+        sdkVersion = getHyperSDKVersion(rootProject)
+        excludedMicroSDKs = getExcludedMicroSdks(rootProject)
+    }
 }
