@@ -1,6 +1,6 @@
 # HYPER-SDK-CAPACITOR
 
-Capacitor Wrapper over HyperSDK which enables payment orchestration via different dynamic modules. More details available at Juspay Developer Docs for [Express Checkout SDK](https://developer.juspay.in/v2.0/docs/introduction) and [Payment Page SDK](https://developer.juspay.in/v4.0/docs/introduction).
+Capacitor Wrapper over HyperSDK which enables payment orchestration via different dynamic modules. More details available at Juspay Developer Docs for [Express Checkout SDK](juspay.io/in/docs/ec-headless/capacitor) and [Payment Page SDK](https://juspay.io/in/docs/hyper-checkout/capacitor).
 
 ## Install
 
@@ -33,14 +33,14 @@ buildscript {
     ext {
         ....
         clientId = "<clientId shared by Juspay team>"
-        hyperSDKVersion = "2.1.25"
+        hyperSDKVersion = "2.2.2"
         ....
     }
     ....
 }
 ```
-
-Optionally, you can also provide an override for base SDK version present in plugin (the newer version among both would be considered).
+- You can also provide an override for base SDK version present in plugin (the newer version among both would be considered). - Optional
+- Exclude microSDKs provided with HyperSDK for given clientId by adding excludedMicroSDKs - Optional
 
 
 ### iOS
@@ -146,7 +146,7 @@ This method should be called on the render of the host screen. This will boot up
 await HyperServices.initiate(initiatePayload);
 ```
 
-Follow the documentation for [initiatePayload](https://developer.juspay.in/v4.0/docs/initiate-payload)
+`Create Initiate payload` - Follow the documentation for [initiatePayload] (https://juspay.io/in/docs/hyper-checkout/capacitor/base-sdk-integration/initiating-sdk)
 
 __________________
 
@@ -174,7 +174,7 @@ await HyperServices.process(processPayload);
 
 ```
 
-Follow the documentation for [Process Payload](https://developer.juspay.in/v4.0/docs/process-payload) :
+Follow the documentation for [Process Payload](https://juspay.io/in/docs/hyper-checkout/capacitor/base-sdk-integration/rendering-the-checkout-screen) :
 
 __________________
 
@@ -220,9 +220,9 @@ HyperServices.addListener('HyperEvent', async (data) => {
 
 #### WEB
 
-Documentation : <https://developer.juspay.in/v5.1/docs/introduction>
+Documentation : <https://juspay.io/in/docs/hyper-checkout/web/overview/integration-architecture>
 Once the payment is complete the user is redirected to the return_url configured by you. Following is the typical destination where the user is taken to:
-Payment Response : <https://developer.juspay.in/docs/integration#section-payment-response>
+Payment Response : <https://juspay.io/in/docs/hyper-checkout/web/base-sdk-integration/handle-payment-response>
 
 __________________
 
