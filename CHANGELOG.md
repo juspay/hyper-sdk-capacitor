@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.16](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.15...v3.0.16) (2025-04-03)
+
+
+### Bug Fixes
+
+* updated IOS SDK Version to 2.2.2 ([#36](https://github.com/juspay/hyper-sdk-capacitor/issues/36)) ([4f29759](https://github.com/juspay/hyper-sdk-capacitor/commit/4f2975918f7947301b51c025317efae3181415b4))
+
 ### [3.0.15](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.14...v3.0.15) (2024-10-23)
 
 
