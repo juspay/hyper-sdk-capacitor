@@ -70,6 +70,25 @@ Run the following command inside the ios folder of your project:
 pod install
 ```
 
+**(Optional)** Add the following property in `package.json` of your project before running pod install if you want to override the base SDK version present in the plugin (the newer version among both would be considered):
+
+```json
+  {
+    ....
+    "scripts": {
+      ....
+    },
+    "dependencies": {
+      ....
+    },
+    "devDependencies": {
+      ....
+    },
+    "hyperSdkIOSVersion": "2.2.2"
+    ....
+  }
+```
+
 __________________
 
 ### Import HyperSDK
