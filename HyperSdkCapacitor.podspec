@@ -2,7 +2,22 @@ require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
-hyper_sdk_version = "2.1.43"
+hyper_sdk_version = "2.2.2"
+
+begin
+  package_json_path = File.expand_path(File.join(__dir__, "../../package.json"))
+  puts "Reading package.json from #{package_json_path}"
+  apps_package = JSON.parse(File.read(package_json_path))
+  if apps_package["hyperSdkIOSVersion"]
+    override_version = apps_package["hyperSdkIOSVersion"]
+    hyper_sdk_version = Gem::Version.new(override_version) > Gem::Version.new(hyper_sdk_version) ? override_version : hyper_sdk_version
+    if hyper_sdk_version != override_version
+      puts ("Ignoring the overriden SDK version present in package.json (#{override_version}) as there is a newer version present in the SDK (#{hyper_sdk_version}).").yellow
+    end
+  end
+rescue => e
+  puts ("An error occurred while overrding the IOS SDK Version. #{e.message}").red
+end
 
 Pod::Spec.new do |s|
   s.name = 'HyperSdkCapacitor'
