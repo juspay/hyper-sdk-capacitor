@@ -15,6 +15,8 @@ export interface HyperServicesPlugin extends Plugin {
 
   process(payload: any): Promise<void>;
 
+  processWithViewController?(payload: any): Promise<void>;
+
   terminate(): Promise<void>;
 
   isInitialised(): Promise<{ isInitialised: boolean }>;

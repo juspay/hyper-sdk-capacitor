@@ -16,6 +16,7 @@ CAP_PLUGIN(HyperServicesPlugin, "HyperServices",
            CAP_PLUGIN_METHOD(preFetch, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(initiate, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(process, CAPPluginReturnNone);
+           CAP_PLUGIN_METHOD(processWithViewController, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(terminate, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(updateBaseViewController, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(onBackPressed, CAPPluginReturnNone);
