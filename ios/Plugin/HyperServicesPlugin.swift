@@ -72,6 +72,30 @@ public class HyperServicesPlugin: CAPPlugin {
         if let payload = call.options {
             if (payload.keys.count) > 0 {
                 DispatchQueue.main.sync {
+                    self.hyperInstance.shouldUseViewController = false
+                    self.hyperInstance.process(payload)
+                }
+                call.resolve()
+                return
+            }
+        }
+        call.reject("Invalid process payload", nil, nil, nil)
+    }
+
+
+    @objc func processWithViewController(_ call: CAPPluginCall) {
+        if hyperInstance == nil {
+            call.reject("Create a Hyper SDK Instance before calling process", nil, nil, nil)
+            return
+        }
+        if !hyperInstance.isInitialised() {
+            call.reject("Initiate should be done before calling process", nil, nil, nil)
+            return
+        }
+        if let payload = call.options {
+            if (payload.keys.count) > 0 {
+                DispatchQueue.main.sync {
+                    self.hyperInstance.shouldUseViewController = true
                     self.hyperInstance.process(payload)
                 }
                 call.resolve()
