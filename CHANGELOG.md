@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.17](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.16...v3.0.17) (2025-04-04)
+
+
+### Bug Fixes
+
+* added processWithViewController function in iOS ([30b2b05](https://github.com/juspay/hyper-sdk-capacitor/commit/30b2b056af1addcffb7e18274c4e6525879d784f))
+
 ### [3.0.16](https://github.com/juspay/hyper-sdk-capacitor/compare/v3.0.15...v3.0.16) (2025-04-03)
 
 
