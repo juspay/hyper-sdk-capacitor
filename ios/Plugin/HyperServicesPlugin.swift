@@ -10,7 +10,22 @@ import Capacitor
 import HyperSDK
 
 @objc(HyperServicesPlugin)
-public class HyperServicesPlugin: CAPPlugin {
+public class HyperServicesPlugin: CAPPlugin, CAPBridgedPlugin {
+
+    public let identifier = "HyperServicesPlugin"
+    public let jsName = "HyperServices"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "createHyperServices", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "isInitialised", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "preFetch", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "initiate", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "process", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "processWithViewController", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "terminate", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "updateBaseViewController", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "onBackPressed", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "isNull", returnType: CAPPluginReturnPromise)
+    ]
 
     var hyperInstance: HyperServices!
 
@@ -122,7 +137,7 @@ public class HyperServicesPlugin: CAPPlugin {
         return self.topViewControllerWithRootViewController(viewController: UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController)
     }
 
-    func topViewControllerWithRootViewController (viewController: UIViewController?) -> UIViewController? {
+    func topViewControllerWithRootViewController(viewController: UIViewController?) -> UIViewController? {
         if viewController is UITabBarController {
             let tabBarController = viewController as? UITabBarController
             return topViewControllerWithRootViewController(viewController: tabBarController?.selectedViewController)
