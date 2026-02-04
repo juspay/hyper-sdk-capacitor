@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
 
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", exact: "6.2.1"),
-        .package(url: "https://github.com/juspay/hypersdk-ios.git", branch: "main")
+        .package(url: "https://github.com/juspay/hypersdk-ios.git", exact: "2.2.5")
     ],
     targets: [
         .target(
