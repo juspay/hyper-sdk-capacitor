@@ -32,7 +32,7 @@ let package = Package(
             ],
             path: "ios/Plugin",
             exclude: ["HyperServicesPlugin.m"],
-            sources: ["HyperServicesPlugin.swift"]
+            sources: ["HyperServicesPlugin.swift", "HyperServicesPluginExtension.swift"]
         )
     ]
 )
