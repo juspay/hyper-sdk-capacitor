@@ -10,7 +10,7 @@ import Capacitor
 import HyperSDK
 
 @objc(HyperServicesPlugin)
-public class HyperServicesPlugin: CAPPlugin, CAPBridgedPlugin {
+public class HyperServicesPlugin: CAPPlugin {
 
     public let identifier = "HyperServicesPlugin"
     public let jsName = "HyperServices"
