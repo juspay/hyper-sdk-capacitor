@@ -56,7 +56,6 @@
     "@ionic/eslint-config": "^0.3.0",
     "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
-    "@types/parse-path": "^7.0.3",
     "commitlint": "^17.0.3",
     "eslint": "^7.11.0",
     "husky": "^8.0.1",
@@ -110,8 +109,5 @@
     "android": {
       "src": "android"
     }
-  },
-  "dependencies": {
-    "parse-path": "^7.1.0"
   }
 }
