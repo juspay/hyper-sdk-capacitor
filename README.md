@@ -89,6 +89,24 @@ pod install
   }
 ```
 
+#### Swift Package Manager (SPM) Integration
+
+For Capacitor 6+ projects using SPM, the `hyperSdkIOSVersion` from `package.json` is also supported.
+
+> **Updating HyperSDK Version with SPM**
+> 
+> If you need to change the `hyperSdkIOSVersion` after initial installation, you must:
+> 1. Update `hyperSdkIOSVersion` in your `package.json`
+> 2. Uninstall and reinstall the plugin:
+>    ```bash
+>    npm uninstall hyper-sdk-capacitor
+>    npm install hyper-sdk-capacitor
+>    npx cap sync ios
+>    ```
+> 3. Close and reopen Xcode to re-resolve packages
+>
+> This is required because SPM caches resolved package versions.
+
 __________________
 
 ### Import HyperSDK
