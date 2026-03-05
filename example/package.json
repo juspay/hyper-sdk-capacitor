@@ -22,7 +22,7 @@
     "hyper-sdk-capacitor": "file:.."
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.0.0",
+    "@capacitor/cli": "^8.1.0",
     "jsrsasign": "^11.0.0",
     "jsrsasign-util": "^1.0.5",
     "pod-install": "^0.1.38",
