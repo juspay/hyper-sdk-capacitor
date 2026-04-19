@@ -4,16 +4,28 @@ buildscript {
 
     ext {
         clientId = 'picasso'
-        hyperSDKVersion = '2.2.1'
+        
+        // Example clientConfigs
+        // clientConfigs = [
+        //     pptemplate: {
+        //         return [
+        //             tenantName  : "juspayglobal"
+        //         ]
+        //     }
+        // ]
+        
+        hyperSDKVersion = "2.2.8-rc.02"
         // excludedMicroSDKs = [] // To exclude some dependency added with hypersdk
     }
     repositories {
         google()
         mavenCentral()
+        maven { url "https://maven.juspay.in/hyper-sdk/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.9.1'
         classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'in.juspay:hypersdk.plugin:2.2.8'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -26,7 +38,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
+        maven { url "https://maven.juspay.in/hyper-sdk/" }
         maven { url "https://maven.getsimpl.com" }
     }
 }

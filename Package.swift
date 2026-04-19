@@ -10,7 +10,7 @@ import PackageDescription
 import Foundation
 
 
-var hyperSdkVersion = "2.2.2"
+var hyperSdkVersion = "2.2.6"
 
 func getHyperSdkVersion() -> String {
     let fileManager = FileManager.default
