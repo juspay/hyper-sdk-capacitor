@@ -2,7 +2,7 @@ require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
-hyper_sdk_version = "2.2.2"
+hyper_sdk_version = "2.2.6"
 
 begin
   package_json_path = File.expand_path(File.join(__dir__, "../../package.json"))

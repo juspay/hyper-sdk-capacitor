@@ -7,7 +7,9 @@
 import type { Plugin } from '@capacitor/core';
 
 export interface HyperServicesPlugin extends Plugin {
-  createHyperServices(clientId?: string, service?: string): Promise<void>;
+  createHyperServices(options?: { clientId?: string; service?: string }): Promise<void>;
+
+  createHyperServicesWithTenantId(options: { tenantId: string; clientId?: string; service?: string; env?: string }): Promise<void>;
 
   preFetch(payload: any): Promise<void>;
 
