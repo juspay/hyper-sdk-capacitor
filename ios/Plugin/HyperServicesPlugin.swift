@@ -28,6 +28,7 @@ public class HyperServicesPlugin: CAPPlugin {
     ]
 
     var hyperInstance: HyperServices!
+    var widgetContainerView: UIView?
 
     @objc func createHyperServices(_ call: CAPPluginCall) {
         if hyperInstance == nil {
@@ -86,9 +87,50 @@ public class HyperServicesPlugin: CAPPlugin {
         }
         if let payload = call.options {
             if (payload.keys.count) > 0 {
+                var missingRect = false
                 DispatchQueue.main.sync {
+                    var modifiedPayload = payload
+
+                    // Payment Widget: create native container matching the div's position
+                    if var hyperPayload = modifiedPayload["payload"] as? [String: Any],
+                       var fragmentViewGroups = hyperPayload["fragmentViewGroups"] as? [String: Any],
+                       fragmentViewGroups["paymentWidget"] != nil,
+                       let parentView = self.bridge?.viewController?.view {
+                        guard let rectDict = hyperPayload["paymentWidgetRect"] as? [String: Any] else {
+                            missingRect = true
+                            return
+                        }
+                        let container = UIView()
+                        container.translatesAutoresizingMaskIntoConstraints = false
+
+                        parentView.addSubview(container)
+                        self.widgetContainerView = container
+
+                        let x = CGFloat((rectDict["x"] as? NSNumber)?.doubleValue ?? 0)
+                        let y = CGFloat((rectDict["y"] as? NSNumber)?.doubleValue ?? 0)
+                        let width = CGFloat((rectDict["width"] as? NSNumber)?.doubleValue ?? Double(parentView.bounds.width))
+                        let height = CGFloat((rectDict["height"] as? NSNumber)?.doubleValue ?? 0)
+                        var constraints = [
+                            container.leadingAnchor.constraint(equalTo: parentView.leadingAnchor, constant: x),
+                            container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: y),
+                            container.widthAnchor.constraint(equalToConstant: width)
+                        ]
+                        if height > 0 {
+                            constraints.append(container.heightAnchor.constraint(equalToConstant: height))
+                        }
+                        NSLayoutConstraint.activate(constraints)
+
+                        fragmentViewGroups["paymentWidget"] = container
+                        hyperPayload["fragmentViewGroups"] = fragmentViewGroups
+                        modifiedPayload["payload"] = hyperPayload
+                    }
+
                     self.hyperInstance.shouldUseViewController = false
-                    self.hyperInstance.process(payload)
+                    self.hyperInstance.process(modifiedPayload)
+                }
+                if missingRect {
+                    call.reject("paymentWidgetRect is required for payment widget", nil, nil, nil)
+                    return
                 }
                 call.resolve()
                 return
@@ -120,6 +162,10 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func terminate(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            self.widgetContainerView?.removeFromSuperview()
+            self.widgetContainerView = nil
+        }
         if self.hyperInstance != nil {
             self.hyperInstance.terminate()
         }

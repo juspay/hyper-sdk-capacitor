@@ -244,6 +244,8 @@ window.customElements.define(
         </br>
         <button class="btn" id="process_btn" >Process</button>
         </br>
+        <button class="btn" id="process_widget_btn" >Process Widget</button>
+        </br>
         <button class="btn btn" id="terminate" >Terminate</button>
         </br>
         <button class="btn btn" id="is_null" >isNull</button>
@@ -397,9 +399,93 @@ window.customElements.define(
               console.error('Process Failed: ', e);
             }
           });
+
+        self.shadowRoot
+          .querySelector('#process_widget_btn')
+          ?.addEventListener('click', async _e => {
+            try {
+              const orderId = 'DW-' + newOrderId();
+              const orderDetailsPayload = {
+                order_id: orderId,
+                merchant_id: merchantData.merchantId,
+                amount: customerData.amount,
+                timestamp: Date.now().toString(),
+                customer_id: customerData.customerId,
+                customer_phone: customerData.mobile,
+                customer_email: customerData.email,
+                return_url: 'http://localhost:3000/',
+              };
+
+              const features = {
+                paymentWidget: { enable: true },
+                paymentAttempt: { enable: true },
+              };
+
+              const orderDetailsWithFeatures = {
+                ...orderDetailsPayload,
+                features: features,
+                clientId: merchantData.clientId,
+                merchantId: merchantData.merchantId,
+                environment: 'sandbox',
+                customerId: customerData.customerId,
+                orderId: orderId,
+                endUrls: ['https://sandbox.juspay.in/end'],
+                customerMobile: customerData.mobile,
+                customerEmail: customerData.email,
+                hidePaymentWidget: false,
+              };
+
+              const signature = getSignature(orderDetailsWithFeatures);
+
+              const widgetDiv = document.getElementById(
+                'paymentWidgetContainer',
+              );
+              if (widgetDiv) widgetDiv.style.display = 'block';
+
+              const processPayload = {
+                requestId: uuidv4(),
+                service: 'in.juspay.hyperpay',
+                payload: {
+                  fragmentViewGroups: {
+                    paymentWidget: 'paymentWidgetContainer',
+                  },
+                  action: 'paymentPage',
+                  clientId: merchantData.clientId,
+                  merchantKeyId: merchantData.merchantKeyId,
+                  merchantId: merchantData.merchantId,
+                  environment: 'sandbox',
+                  customerId: customerData.customerId,
+                  orderId: orderId,
+                  amount: customerData.amount,
+                  customerMobile: customerData.mobile,
+                  customerEmail: customerData.email,
+                  orderDetails: JSON.stringify(orderDetailsWithFeatures),
+                  signature: signature,
+                },
+              };
+              console.log('Process Widget Payload: ', processPayload);
+              try {
+                if (textView) {
+                  textView.innerHTML += '<br><p>Process Widget Payload = </p>';
+                  textView.innerHTML += JSON.stringify(processPayload);
+                  textView.innerHTML += '<br>';
+                }
+              } catch (error) {
+                console.error(error);
+              }
+              toggleLoader(true);
+              await HyperServices.process(processPayload);
+            } catch (e) {
+              toggleLoader(false);
+              console.error('Process Widget Failed: ', e);
+            }
+          });
+
         self.shadowRoot
           .querySelector('#terminate')
           ?.addEventListener('click', async _e => {
+            const widgetDiv = document.getElementById('paymentWidgetContainer');
+            if (widgetDiv) widgetDiv.style.display = 'none';
             await HyperServices.terminate();
           });
 

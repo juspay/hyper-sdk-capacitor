@@ -285,6 +285,61 @@ This is a helper method and can be used to check whether the `HyperServices` obj
 var { isNull } = await HyperServices.isNull();
 ```
 
+__________________
+
+### Payment Widget (Inline Embedded Checkout)
+
+The payment widget allows you to embed the payment UI inline inside your page rather than taking over the full screen. The SDK renders into a native view that is positioned to match a placeholder div in your HTML.
+
+#### Step 1: Add a placeholder div in your HTML
+
+The div must have an explicit `position`, `width`, and a `height` (height is optional — if omitted the SDK will size itself):
+
+```html
+<div id="paymentWidgetContainer" style="
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  display: none;
+"></div>
+```
+
+#### Step 2: Show the div and call process with the div ID
+
+Pass the div's element ID as a string for `fragmentViewGroups.paymentWidget`. The plugin automatically reads `getBoundingClientRect()` on the div and positions the native container to match it.
+
+```javascript
+// Show the placeholder div before calling process
+document.getElementById('paymentWidgetContainer').style.display = 'block';
+
+await HyperServices.process({
+  requestId: '<uuid>',
+  service: 'in.juspay.hyperpay',
+  payload: {
+    fragmentViewGroups: {
+      paymentWidget: 'paymentWidgetContainer', // div element ID
+    },
+    action: 'paymentPage',
+    // ... rest of your process payload
+  },
+});
+```
+
+#### Step 3: Hide the div on terminate
+
+```javascript
+document.getElementById('paymentWidgetContainer').style.display = 'none';
+await HyperServices.terminate();
+```
+
+**Notes:**
+- The div must be visible (not `display: none`) when `process()` is called so `getBoundingClientRect()` returns valid dimensions.
+- On **Web**, the div ID is resolved to a DOM element and passed directly to the SDK.
+- On **Android** and **iOS**, a native `FrameLayout`/`UIView` is created and positioned at the same screen coordinates as the div. The WebView remains interactive outside the widget area.
+- If `height` is `0` or not set on the div, the native container uses `WRAP_CONTENT` and the SDK sizes itself.
+
 ## License
 
 hyper-sdk-capacitor is distributed under [AGPL-3.0-only](https://github.com/juspay/hyper-sdk-capacitor/src/main/LICENSE.md) license.
