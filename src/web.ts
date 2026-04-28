@@ -72,6 +72,18 @@ export class HyperServicesWeb extends WebPlugin implements HyperServicesPlugin {
         reject(new Error('HyperServices instance not created'));
         return;
       }
+      // Payment Widget: resolve div ID string to actual DOM element
+      if (
+        payload?.payload?.fragmentViewGroups?.paymentWidget &&
+        typeof payload.payload.fragmentViewGroups.paymentWidget === 'string'
+      ) {
+        const divElement = document.getElementById(
+          payload.payload.fragmentViewGroups.paymentWidget,
+        );
+        if (divElement) {
+          payload.payload.fragmentViewGroups.paymentWidget = divElement;
+        }
+      }
       this.hyperServices.process(payload);
       resolve();
     });
