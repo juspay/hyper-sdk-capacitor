@@ -10,6 +10,12 @@ package in.juspay.hypersdk.capacitor;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import android.graphics.Rect;
+import android.view.Gravity;
+import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -36,6 +42,55 @@ public class HyperServicesPlugin extends Plugin {
 
     @Nullable
     private HyperServices hyperServices;
+
+    @Nullable
+    private FrameLayout widgetContainer;
+
+    @Nullable
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener;
+
+    private void detachKeyboardAdjustment() {
+        if (widgetContainer != null && keyboardLayoutListener != null) {
+            ViewTreeObserver observer = widgetContainer.getViewTreeObserver();
+            if (observer.isAlive()) {
+                observer.removeOnGlobalLayoutListener(keyboardLayoutListener);
+            }
+        }
+        if (widgetContainer != null) {
+            widgetContainer.setTranslationY(0);
+        }
+        keyboardLayoutListener = null;
+    }
+
+    private void attachKeyboardAdjustment(FrameLayout container) {
+        detachKeyboardAdjustment();
+
+        keyboardLayoutListener = () -> {
+            if (widgetContainer == null) {
+                return;
+            }
+
+            Rect visibleFrame = new Rect();
+            widgetContainer.getWindowVisibleDisplayFrame(visibleFrame);
+
+            int[] containerLocation = new int[2];
+            widgetContainer.getLocationOnScreen(containerLocation);
+
+            int containerBottom = containerLocation[1] + widgetContainer.getHeight();
+            int overlap = Math.max(0, containerBottom - visibleFrame.bottom);
+            widgetContainer.setTranslationY(-overlap);
+        };
+
+        ViewTreeObserver observer = container.getViewTreeObserver();
+        if (observer.isAlive()) {
+            observer.addOnGlobalLayoutListener(keyboardLayoutListener);
+        }
+        container.post(() -> {
+            if (keyboardLayoutListener != null) {
+                keyboardLayoutListener.onGlobalLayout();
+            }
+        });
+    }
 
     @PluginMethod
     public void createHyperServices(PluginCall call) {
@@ -165,7 +220,65 @@ public class HyperServicesPlugin extends Plugin {
                     call.reject("Initiate should be done before calling process!");
                     return;
                 }
-                hyperServices.process(activity, payload);
+
+                // Payment Widget: create native container if fragmentViewGroups is present
+                JSONObject hyperPayload = payload.optJSONObject("payload");
+                JSONObject fragmentViewGroups = hyperPayload != null
+                        ? hyperPayload.optJSONObject("fragmentViewGroups")
+                        : null;
+                if (fragmentViewGroups != null && fragmentViewGroups.has("paymentWidget")) {
+                    final JSONObject fvg = fragmentViewGroups;
+                    final JSONObject rectJson = hyperPayload != null ? hyperPayload.optJSONObject("paymentWidgetRect") : null;
+                    if (rectJson == null) {
+                        call.reject("paymentWidgetRect is required for payment widget");
+                        return;
+                    }
+                    final HyperServices hs = hyperServices;
+                    final FragmentActivity act = activity;
+                    act.runOnUiThread(() -> {
+                        try {
+                            FrameLayout container = new FrameLayout(act);
+                            float density = act.getResources().getDisplayMetrics().density;
+                            int x = (int) (rectJson.optDouble("x", 0) * density);
+                            int y = (int) (rectJson.optDouble("y", 0) * density);
+                            int width = (int) (rectJson.optDouble("width", 0) * density);
+                            int height = (int) (rectJson.optDouble("height", 0) * density);
+
+                            FrameLayout.LayoutParams params;
+                            if (height > 0) {
+                                params = new FrameLayout.LayoutParams(width, height);
+                            } else {
+                                params = new FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                            params.leftMargin = x;
+                            params.topMargin = y;
+                            params.gravity = Gravity.TOP | Gravity.START;
+                            container.setLayoutParams(params);
+                            ViewGroup contentView = act.findViewById(android.R.id.content);
+                            contentView.addView(container, params);
+                            widgetContainer = container;
+                            attachKeyboardAdjustment(container);
+
+                            fvg.put("paymentWidget", container);
+                            if (hyperPayload != null) {
+                                hyperPayload.put("fragmentViewGroups", fvg);
+                                payload.put("payload", hyperPayload);
+                            }
+
+                            hs.process(act, payload);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            JSObject errorEvent = new JSObject();
+                            errorEvent.put("event", "widget_setup_error");
+                            errorEvent.put("error", e.getMessage());
+                            notifyListeners(HYPER_EVENT, errorEvent);
+                        }
+                    });
+                    call.resolve();
+                } else {
+                    hyperServices.process(activity, payload);
+                    call.resolve();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -175,6 +288,20 @@ public class HyperServicesPlugin extends Plugin {
     @PluginMethod
     public void terminate(PluginCall call) {
         synchronized (lock) {
+            detachKeyboardAdjustment();
+            if (widgetContainer != null) {
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        if (widgetContainer != null && widgetContainer.getParent() != null) {
+                            ((ViewGroup) widgetContainer.getParent()).removeView(widgetContainer);
+                        }
+                        widgetContainer = null;
+                    });
+                } else {
+                    widgetContainer = null;
+                }
+            }
             if (hyperServices != null) {
                 hyperServices.terminate();
             }

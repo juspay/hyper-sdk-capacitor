@@ -28,6 +28,72 @@ public class HyperServicesPlugin: CAPPlugin {
     ]
 
     var hyperInstance: HyperServices!
+    var widgetContainerView: UIView?
+    var widgetContainerTopConstraint: NSLayoutConstraint?
+    var widgetContainerBaseTopInset: CGFloat = 0
+    var widgetKeyboardObservers: [NSObjectProtocol] = []
+
+    func removeWidgetContainer() {
+        widgetContainerView?.removeFromSuperview()
+        widgetContainerView = nil
+        widgetContainerTopConstraint = nil
+        widgetContainerBaseTopInset = 0
+    }
+
+    func removeKeyboardObservers() {
+        for observer in widgetKeyboardObservers {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        widgetKeyboardObservers.removeAll()
+    }
+
+    func syncWidgetContainerWithKeyboard(container: UIView, parentView: UIView, notification: Notification) {
+        parentView.layoutIfNeeded()
+
+        let animationDuration =
+            notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.25
+        let animationCurve =
+            notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
+            ?? UInt(UIView.AnimationCurve.easeInOut.rawValue)
+        let keyboardFrameValue =
+            notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+
+        let overlap: CGFloat
+        if let keyboardFrameValue {
+            let keyboardFrame = parentView.convert(keyboardFrameValue.cgRectValue, from: nil)
+            let containerBottom = widgetContainerBaseTopInset + container.bounds.height
+            overlap = max(0, containerBottom - keyboardFrame.minY)
+        } else {
+            overlap = 0
+        }
+
+        widgetContainerTopConstraint?.constant = widgetContainerBaseTopInset - overlap
+
+        UIView.animate(
+            withDuration: animationDuration,
+            delay: 0,
+            options: [UIView.AnimationOptions(rawValue: animationCurve << 16), .beginFromCurrentState]
+        ) {
+            parentView.layoutIfNeeded()
+        }
+    }
+
+    func observeKeyboard(for container: UIView, in parentView: UIView) {
+        removeKeyboardObservers()
+
+        let center = NotificationCenter.default
+        let notificationNames = [
+            UIResponder.keyboardWillChangeFrameNotification,
+            UIResponder.keyboardWillHideNotification
+        ]
+
+        widgetKeyboardObservers = notificationNames.map { name in
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self, weak parentView, weak container] notification in
+                guard let self, let parentView, let container else { return }
+                self.syncWidgetContainerWithKeyboard(container: container, parentView: parentView, notification: notification)
+            }
+        }
+    }
 
     @objc func createHyperServices(_ call: CAPPluginCall) {
         if hyperInstance == nil {
@@ -86,9 +152,56 @@ public class HyperServicesPlugin: CAPPlugin {
         }
         if let payload = call.options {
             if (payload.keys.count) > 0 {
+                var missingRect = false
                 DispatchQueue.main.sync {
+                    var modifiedPayload = payload
+
+                    // Payment Widget: create native container matching the div's position
+                    if var hyperPayload = modifiedPayload["payload"] as? [String: Any],
+                       var fragmentViewGroups = hyperPayload["fragmentViewGroups"] as? [String: Any],
+                       fragmentViewGroups["paymentWidget"] != nil,
+                       let parentView = self.bridge?.viewController?.view {
+                        guard let rectDict = hyperPayload["paymentWidgetRect"] as? [String: Any] else {
+                            missingRect = true
+                            return
+                        }
+                        self.removeKeyboardObservers()
+                        self.removeWidgetContainer()
+                        let container = UIView()
+                        container.translatesAutoresizingMaskIntoConstraints = false
+
+                        parentView.addSubview(container)
+                        self.widgetContainerView = container
+
+                        let x = CGFloat((rectDict["x"] as? NSNumber)?.doubleValue ?? 0)
+                        let y = CGFloat((rectDict["y"] as? NSNumber)?.doubleValue ?? 0)
+                        let width = CGFloat((rectDict["width"] as? NSNumber)?.doubleValue ?? Double(parentView.bounds.width))
+                        let height = CGFloat((rectDict["height"] as? NSNumber)?.doubleValue ?? 0)
+                        let topConstraint = container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: y)
+                        var constraints = [
+                            container.leadingAnchor.constraint(equalTo: parentView.leadingAnchor, constant: x),
+                            topConstraint,
+                            container.widthAnchor.constraint(equalToConstant: width)
+                        ]
+                        if height > 0 {
+                            constraints.append(container.heightAnchor.constraint(equalToConstant: height))
+                        }
+                        NSLayoutConstraint.activate(constraints)
+                        self.widgetContainerTopConstraint = topConstraint
+                        self.widgetContainerBaseTopInset = y
+                        self.observeKeyboard(for: container, in: parentView)
+
+                        fragmentViewGroups["paymentWidget"] = container
+                        hyperPayload["fragmentViewGroups"] = fragmentViewGroups
+                        modifiedPayload["payload"] = hyperPayload
+                    }
+
                     self.hyperInstance.shouldUseViewController = false
-                    self.hyperInstance.process(payload)
+                    self.hyperInstance.process(modifiedPayload)
+                }
+                if missingRect {
+                    call.reject("paymentWidgetRect is required for payment widget", nil, nil, nil)
+                    return
                 }
                 call.resolve()
                 return
@@ -120,6 +233,10 @@ public class HyperServicesPlugin: CAPPlugin {
     }
 
     @objc func terminate(_ call: CAPPluginCall) {
+        removeKeyboardObservers()
+        DispatchQueue.main.async {
+            self.removeWidgetContainer()
+        }
         if self.hyperInstance != nil {
             self.hyperInstance.terminate()
         }
