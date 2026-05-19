@@ -9,15 +9,14 @@
 import PackageDescription
 import Foundation
 
-
 var hyperSdkVersion = "2.2.2"
 
 func getHyperSdkVersion() -> String {
     let fileManager = FileManager.default
     let packageDir = URL(fileURLWithPath: #file).deletingLastPathComponent()
-    
+
     var searchPaths: [String] = []
-    
+
     // Search sibling directories (for monorepo/local dev)
     if let contents = try? fileManager.contentsOfDirectory(atPath: packageDir.path) {
         for item in contents {
@@ -32,19 +31,19 @@ func getHyperSdkVersion() -> String {
             }
         }
     }
-    
+
     // Search parent directories (for node_modules install)
     var currentPath = packageDir
     for _ in 1...6 {
         currentPath = currentPath.deletingLastPathComponent()
         let packageJsonPath = currentPath.appendingPathComponent("package.json").path
         searchPaths.append(packageJsonPath)
-        
+
         if let version = readHyperSdkVersion(from: packageJsonPath) {
             return version
         }
     }
-    
+
     return hyperSdkVersion
 }
 
