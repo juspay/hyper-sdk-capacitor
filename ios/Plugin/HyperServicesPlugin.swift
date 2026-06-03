@@ -173,13 +173,13 @@ public class HyperServicesPlugin: CAPPlugin {
                         parentView.addSubview(container)
                         self.widgetContainerView = container
 
-                        let x = CGFloat((rectDict["x"] as? NSNumber)?.doubleValue ?? 0)
-                        let y = CGFloat((rectDict["y"] as? NSNumber)?.doubleValue ?? 0)
+                        let originX = CGFloat((rectDict["x"] as? NSNumber)?.doubleValue ?? 0)
+                        let originY = CGFloat((rectDict["y"] as? NSNumber)?.doubleValue ?? 0)
                         let width = CGFloat((rectDict["width"] as? NSNumber)?.doubleValue ?? Double(parentView.bounds.width))
                         let height = CGFloat((rectDict["height"] as? NSNumber)?.doubleValue ?? 0)
-                        let topConstraint = container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: y)
+                        let topConstraint = container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: originY)
                         var constraints = [
-                            container.leadingAnchor.constraint(equalTo: parentView.leadingAnchor, constant: x),
+                            container.leadingAnchor.constraint(equalTo: parentView.leadingAnchor, constant: originX),
                             topConstraint,
                             container.widthAnchor.constraint(equalToConstant: width)
                         ]
