@@ -17,15 +17,42 @@ declare global {
 export class HyperServicesWeb extends WebPlugin implements HyperServicesPlugin {
   hyperServices: any;
 
-  async createHyperServices(
+  async createHyperServices(options?: {
+    clientId?: string;
+    service?: string;
+  }): Promise<void> {
+    return this.createHyperServicesInternal(
+      options?.clientId,
+      undefined,
+      options?.service,
+    );
+  }
+
+  async createHyperServicesWithTenantId(options: {
+    tenantId: string;
+    clientId?: string;
+    service?: string;
+    env?: string;
+  }): Promise<void> {
+    return this.createHyperServicesInternal(
+      options.clientId,
+      options.tenantId,
+      options.service,
+      options.env,
+    );
+  }
+
+  private createHyperServicesInternal(
     clientId?: string,
+    tenantId?: string,
     service?: string,
+    env?: string,
   ): Promise<void> {
     return new Promise(resolve => {
       const jsElm = document.createElement('script');
+      const baseSDKUrl = this.getSDKBaseDomain(tenantId, env);
       jsElm.type = 'application/javascript';
-      jsElm.src =
-        'https://public.releases.juspay.in/hyper-sdk-web/HyperServices.js';
+      jsElm.src = baseSDKUrl + '/HyperServices.js';
       if (service) {
         jsElm.setAttribute('service', service);
       }
@@ -39,6 +66,18 @@ export class HyperServicesWeb extends WebPlugin implements HyperServicesPlugin {
         resolve();
       };
     });
+  }
+
+  private getSDKBaseDomain(tenantId = '', env?: string) {
+    switch (tenantId) {
+      case 'juspayglobal':
+      case 'jp_global':
+        return env == 'sandbox'
+          ? 'https://payments.sandbox.juspay.io/payment-page'
+          : 'https://payments.juspay.io/payment-page';
+      default:
+        return 'https://public.releases.juspay.in/hyper-sdk-web';
+    }
   }
 
   async preFetch(payload: any): Promise<void> {

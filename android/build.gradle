@@ -1,3 +1,5 @@
+import in.juspay.payments.core.ClientConfig
+
 ext {
     androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
 }
@@ -6,11 +8,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://maven.juspay.in/jp-build-packages/hyper-sdk/" }
+        maven { url "https://maven.juspay.in/hyper-sdk/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath 'in.juspay:hypersdk.plugin:2.0.8'
+        classpath 'in.juspay:hypersdk.plugin:2.2.8'
     }
 }
 
@@ -89,16 +91,54 @@ static def getExcludedMicroSdks(rootProject) {
 }
 
 static def getClientId(rootProject) {
-    if (!rootProject.hasProperty('clientId')) {
-        throw new GradleException("clientId parameter is required in ext block of root build.gradle")
-    }
     return rootProject.clientId
+}
+
+static def getClientConfigs(rootProject, Project project) {
+    def clientConfigs = rootProject.clientConfigs
+
+    def namedDomainObjectContainer = project.container(ClientConfig) { name ->
+        def clientConfig = new ClientConfig(name)
+
+        def configClosure = clientConfigs.get(name)
+
+        if (configClosure instanceof Closure) {
+            def configMap = configClosure.call()
+
+            if (configMap instanceof Map) {
+                if (configMap.containsKey("tenantName")) {
+                    clientConfig.tenantName = configMap.tenantName
+                }
+                if (configMap.containsKey("assetVersion")) {
+                    clientConfig.assetVersion = configMap.assetVersion
+                }
+            }
+        }
+
+        return clientConfig
+    }
+
+    clientConfigs.each { key, configClosure ->
+        if (configClosure instanceof Closure) {
+            def configMap = configClosure.call()
+            if (configMap instanceof Map) {
+                namedDomainObjectContainer.create(key)
+            }
+        }
+    }
+
+    return namedDomainObjectContainer
 }
 
 if (!rootProject.hasProperty('skipHyperSdk') || !rootProject.skipHyperSdk.toBoolean()) {
     hyperSdkPlugin {
-        clientId = getClientId(rootProject)
         sdkVersion = getHyperSDKVersion(rootProject)
         excludedMicroSDKs = getExcludedMicroSdks(rootProject)
+    }
+    if (rootProject.hasProperty("clientId")) {
+        hyperSdkPlugin.clientId = getClientId(rootProject)
+    }
+    if (!rootProject.hasProperty("clientId") && rootProject.hasProperty("clientConfigs")) {
+        hyperSdkPlugin.clientConfigs = getClientConfigs(rootProject, project)
     }
 }

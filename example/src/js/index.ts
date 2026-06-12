@@ -215,6 +215,14 @@ window.customElements.define(
         font-size: 17px;
         color: #ffffff;
       }
+      .input-field {
+        min-width: 200px;
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 17px;
+        margin-bottom: 8px;
+      }
       .text-view {
         min-width: 240px;
         height: wrap-content;
@@ -234,6 +242,8 @@ window.customElements.define(
       </capacitor-welcome-titlebar>
       <main>
       <div class="btn-wrapper">
+        <input type="text" id="tenant_id_input" placeholder="Tenant ID (leave empty for default)" class="input-field" />
+        </br>
         <button class="btn" id="create_hyper_btn" >Create Hyper Services</button>
         </br>
         <button class="btn" id="prefetch_btn" >Prefetch</button>
@@ -265,12 +275,22 @@ window.customElements.define(
           .querySelector('#create_hyper_btn')
           ?.addEventListener('click', () => {
             toggleLoader(true);
-            HyperServices.createHyperServices(
-              merchantData.clientId,
-              'in.juspay.hyperpay',
-            )
+            const tenantInput = self.shadowRoot?.getElementById(
+              'tenant_id_input',
+            ) as HTMLInputElement;
+            const tenantId = tenantInput?.value?.trim() || '';
+
+            const createPromise = tenantId
+              ? HyperServices.createHyperServicesWithTenantId({
+                  tenantId,
+                  clientId: merchantData.clientId,
+                })
+              : HyperServices.createHyperServices({
+                  clientId: merchantData.clientId,
+                });
+
+            createPromise
               .then(_h => {
-                // Any other API call can be done here.
                 toggleLoader(false);
               })
               .catch(err => {
