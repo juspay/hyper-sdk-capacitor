@@ -1,19 +1,21 @@
 PODS:
-  - Capacitor (4.8.0):
+  - Airborne (0.15.2)
+  - Capacitor (6.2.1):
     - CapacitorCordova
-  - CapacitorApp (4.1.1):
+  - CapacitorApp (6.0.3):
     - Capacitor
-  - CapacitorCordova (4.8.0)
-  - CapacitorSplashScreen (4.2.0):
+  - CapacitorCordova (6.2.1)
+  - CapacitorSplashScreen (6.0.4):
     - Capacitor
-  - HyperSDK (2.2.2):
-    - JuspaySafeBrowser (= 0.1.84)
-    - Salvator (= 1.0.6)
-  - HyperSdkCapacitor (3.0.15):
+  - HyperCore (0.1.11)
+  - HyperSDK (2.2.6):
+    - Airborne (= 0.15.2)
+    - HyperCore (= 0.1.11)
+    - JuspaySafeBrowser (= 0.1.94)
+  - HyperSdkCapacitor (4.0.0):
     - Capacitor
-    - HyperSDK (= 2.2.2)
-  - JuspaySafeBrowser (0.1.84)
-  - Salvator (1.0.6)
+    - HyperSDK (= 2.2.6)
+  - JuspaySafeBrowser (0.1.94)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -24,9 +26,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Airborne
+    - HyperCore
     - HyperSDK
     - JuspaySafeBrowser
-    - Salvator
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -41,14 +44,15 @@ EXTERNAL SOURCES:
     :path: "../../.."
 
 SPEC CHECKSUMS:
-  Capacitor: 6002aadd64492438e5242325025045235dcb7e84
-  CapacitorApp: acd42fe8561fe751ad5b5f459aa85e6acd7bee24
-  CapacitorCordova: c6249dcb2cf04dd835c0e99df1df4b9c8ad997e2
-  CapacitorSplashScreen: 6b1c832e6f822ad1ef05073dc31dfeca02bc03a3
-  HyperSDK: 653f618de09696305b9b705555019ecbbacc10b0
-  HyperSdkCapacitor: fe8c75f920d74ebf150d3a106c6a0050ae8cca36
-  JuspaySafeBrowser: caa2c1a54405f30210ba9d324cf79224e719134d
-  Salvator: 1de69620ac17123ba3491e27a9a8b35bc5b97eaa
+  Airborne: 228863e65285824596fbb5f60ced374a2c22d713
+  Capacitor: c95400d761e376be9da6be5a05f226c0e865cebf
+  CapacitorApp: a19ccb4f5f32d2534be5c6f524d5a9b614a1e8a7
+  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
+  CapacitorSplashScreen: ef140a8b1ea7244e0c245ce2dd4ce5251e7ab86a
+  HyperCore: 4e41f9a478d93f42fcd292cb93de0a8eceb97356
+  HyperSDK: 38e508520b6c326659f929d9f14d4930b5ad6136
+  HyperSdkCapacitor: efc3336cf193f4bfbb20c405e5019a1283229e83
+  JuspaySafeBrowser: 8141eb92fe4d77da997907a0c5eadc0616bce2fa
 
 PODFILE CHECKSUM: ebf31f16be29d1c16022be70f96245b358af5a4e
 

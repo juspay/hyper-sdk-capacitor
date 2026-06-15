@@ -95,17 +95,34 @@ public class HyperServicesPlugin extends Plugin {
     @PluginMethod
     public void createHyperServices(PluginCall call) {
         synchronized (lock) {
-            FragmentActivity activity = getActivity();
+            createHyperService(call, null, null);
+        }
+    }
 
-            if (activity == null) {
-                call.reject("createHyperServices failed: Activity is null");
-                return;
-            }
-            if (hyperServices == null) {
+    @PluginMethod
+    public void createHyperServicesWithTenantId(PluginCall call) {
+        synchronized (lock) {
+            String tenantId = call.getString("tenantId");
+            String clientId = call.getString("clientId");
+            createHyperService(call, tenantId, clientId);
+        }
+    }
+
+    private void createHyperService(PluginCall call, @Nullable String tenantId, @Nullable String clientId) {
+        FragmentActivity activity = getActivity();
+
+        if (activity == null) {
+            call.reject("createHyperServices failed: Activity is null");
+            return;
+        }
+        if (hyperServices == null) {
+            if (tenantId != null && clientId != null) {
+                hyperServices = new HyperServices(activity, tenantId, clientId);
+            } else {
                 hyperServices = new HyperServices(activity);
             }
-            call.resolve();
         }
+        call.resolve();
     }
 
     @PluginMethod

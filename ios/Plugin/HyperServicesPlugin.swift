@@ -16,6 +16,7 @@ public class HyperServicesPlugin: CAPPlugin {
     public let jsName = "HyperServices"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "createHyperServices", returnType: CAPPluginReturnNone),
+        CAPPluginMethod(name: "createHyperServicesWithTenantId", returnType: CAPPluginReturnNone),
         CAPPluginMethod(name: "isInitialised", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "preFetch", returnType: CAPPluginReturnNone),
         CAPPluginMethod(name: "initiate", returnType: CAPPluginReturnNone),
@@ -98,6 +99,20 @@ public class HyperServicesPlugin: CAPPlugin {
     @objc func createHyperServices(_ call: CAPPluginCall) {
         if hyperInstance == nil {
             hyperInstance = HyperServices()
+        }
+        call.resolve()
+    }
+
+    @objc func createHyperServicesWithTenantId(_ call: CAPPluginCall) {
+        if hyperInstance == nil {
+            let tenantId = call.getString("tenantId")
+            let clientId = call.getString("clientId")
+
+            if let tenantId = tenantId, let clientId = clientId {
+                hyperInstance = HyperServices(tenantId: tenantId, clientId: clientId)
+            } else {
+                hyperInstance = HyperServices()
+            }
         }
         call.resolve()
     }
