@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.6](https://github.com/juspay/hyper-sdk-capacitor/compare/v4.0.5...v4.0.6) (2026-07-03)
+
+
+### Bug Fixes
+
+* removed release-it from devDependencies and ran `npm audit fix` ([a913853](https://github.com/juspay/hyper-sdk-capacitor/commit/a91385316d593e1f6b4b79722627d49ba382fc7c))
+
 ### [4.0.5](https://github.com/juspay/hyper-sdk-capacitor/compare/v4.0.4...v4.0.5) (2026-06-15)
 
 ### [4.0.4](https://github.com/juspay/hyper-sdk-capacitor/compare/v4.0.3...v4.0.4) (2026-06-12)
