@@ -34,8 +34,8 @@
     "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ..",
     "verify:android": "cd android && ./gradlew clean build test && cd ..",
     "verify:web": "npm run build",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
-    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
+    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint Package.swift ios/Plugin ios/PluginTests example/ios/App/App",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- lint --fix --format Package.swift ios/Plugin ios/PluginTests example/ios/App/App",
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js}\"",
     "swiftlint": "node-swiftlint",
@@ -43,7 +43,6 @@
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "release": "release-it",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -61,7 +60,6 @@
     "husky": "^8.0.1",
     "prettier": "~2.3.0",
     "prettier-plugin-java": "~1.0.2",
-    "release-it": "^19.0.4",
     "rimraf": "^3.0.2",
     "rollup": "^2.32.0",
     "swiftlint": "^1.0.1",
@@ -88,18 +86,6 @@
           "upper-case"
         ]
       ]
-    }
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": false
     }
   },
   "capacitor": {
