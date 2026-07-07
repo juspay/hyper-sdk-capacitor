@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.7](https://github.com/juspay/hyper-sdk-capacitor/compare/v4.0.6...v4.0.7) (2026-07-07)
+
+
+### Bug Fixes
+
+* update lodash to 4.18.1 to resolve GHSA-r5fr-rjxr-66jc (CVE-2026-4800) ([963d7be](https://github.com/juspay/hyper-sdk-capacitor/commit/963d7be75626b74171bc4dd793854b483db7c60f))
+
 ### [4.0.6](https://github.com/juspay/hyper-sdk-capacitor/compare/v4.0.5...v4.0.6) (2026-07-03)
 
 
