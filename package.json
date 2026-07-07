@@ -95,5 +95,8 @@
     "android": {
       "src": "android"
     }
+  },
+  "overrides": {
+    "lodash": "4.18.1"
   }
 }
