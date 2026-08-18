@@ -31,5 +31,8 @@
   },
   "author": "",
   "license": "ISC",
-  "hyperSdkIOSVersion": "2.2.2"
+  "hyperSdkIOSVersion": "2.2.2",
+  "overrides": {
+    "postcss": "8.5.23"
+  }
 }
