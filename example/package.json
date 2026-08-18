@@ -26,11 +26,13 @@
     "jsrsasign": "^11.0.0",
     "jsrsasign-util": "^1.0.5",
     "pod-install": "^0.1.38",
-    "postcss": "^8.5.18",
     "typescript": "^4.5.2",
     "vite": "^6.2.5"
   },
   "author": "",
   "license": "ISC",
-  "hyperSdkIOSVersion": "2.2.2"
+  "hyperSdkIOSVersion": "2.2.2",
+  "overrides": {
+    "postcss": "8.5.23"
+  }
 }
