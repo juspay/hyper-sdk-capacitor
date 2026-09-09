@@ -16,6 +16,7 @@ buildscript {
         
         hyperSDKVersion = "2.2.8-rc.02"
         // excludedMicroSDKs = [] // To exclude some dependency added with hypersdk
+        // microSDKs = ['hyperupi'] // To use only these microSDKs, replacing the default set resolved for the clientId
     }
     repositories {
         google()

@@ -34,6 +34,8 @@ buildscript {
         ....
         clientId = "<clientId shared by Juspay team>"
         hyperSDKVersion = "2.2.2"
+        excludedMicroSDKs = ["<microSDK to be excluded>"]
+        microSDKs = ["<microSDK to be included>"]
         ....
     }
     ....
@@ -41,6 +43,7 @@ buildscript {
 ```
 - You can also provide an override for base SDK version present in plugin (the newer version among both would be considered). - Optional
 - Exclude microSDKs provided with HyperSDK for given clientId by adding excludedMicroSDKs - Optional
+- Override the set of microSDKs provided with HyperSDK for given clientId by adding microSDKs - Optional. When set, **only** the listed microSDKs are added, replacing the default set resolved for the clientId. Use `excludedMicroSDKs` instead if you only want to drop a few from the default set.
 
 
 ### iOS
