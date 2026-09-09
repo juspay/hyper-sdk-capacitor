@@ -141,4 +141,7 @@ if (!rootProject.hasProperty('skipHyperSdk') || !rootProject.skipHyperSdk.toBool
     if (!rootProject.hasProperty("clientId") && rootProject.hasProperty("clientConfigs")) {
         hyperSdkPlugin.clientConfigs = getClientConfigs(rootProject, project)
     }
+    if (rootProject.hasProperty('microSDKs')) {
+        hyperSdkPlugin.microSDKs = rootProject.microSDKs
+    }
 }
