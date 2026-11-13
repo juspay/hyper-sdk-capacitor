@@ -133,7 +133,6 @@ public class HyperServicesPlugin extends Plugin {
             HyperServices.preFetch(activity, payload);
             call.resolve();
         } catch (Exception e) {
-            e.printStackTrace();
             call.reject(e.getMessage());
         }
     }
@@ -196,7 +195,6 @@ public class HyperServicesPlugin extends Plugin {
                         }
                 );
             } catch (Exception e) {
-                e.printStackTrace();
                 call.reject(e.getMessage());
             }
             call.resolve();
@@ -284,7 +282,6 @@ public class HyperServicesPlugin extends Plugin {
 
                             hs.process(act, payload);
                         } catch (Exception e) {
-                            e.printStackTrace();
                             JSObject errorEvent = new JSObject();
                             errorEvent.put("event", "widget_setup_error");
                             errorEvent.put("error", e.getMessage());
@@ -297,7 +294,6 @@ public class HyperServicesPlugin extends Plugin {
                     call.resolve();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -336,7 +332,6 @@ public class HyperServicesPlugin extends Plugin {
                 try {
                     isInitialised = hyperServices.isInitialised();
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }
